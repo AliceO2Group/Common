@@ -3,6 +3,7 @@ set(LIB_HEADERS
   "${CMAKE_CURRENT_BINARY_DIR}/../include/Common/Version.h" # Generated header
   ../include/Common/World.h # Normal header
   ../include/Common/signalUtilities.h # Normal header
+  ../include/Common/Exceptions.h # Normal header
 )
 
 set(LIB_SOURCES
