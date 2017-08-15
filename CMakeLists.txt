@@ -55,6 +55,10 @@ ENDIF ()
 # Add compiler flags for warnings and (more importantly) fPIC and debug symbols
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra -fPIC")
 
+add_subdirectory(doc)
+
+
+
 
 ####################################
 # Module, library and executable definition
@@ -142,10 +146,10 @@ if (TCL_FOUND)
   O2_GENERATE_LIBRARY()
 endif()
 
-# TODO RECONSIDER THE THINGS BELOW AFTER EXTRACTION TO ITS OWN REPO
-# Make sure we tell the topdir CMakeLists that we exist (if build from topdir)
-get_directory_property(hasParent PARENT_DIRECTORY)
-if(hasParent)
-    set(PROJECT_${PROJECT_NAME} true PARENT_SCOPE)
-endif()
-include(PackageConfigurator)
+## TODO RECONSIDER THE THINGS BELOW AFTER EXTRACTION TO ITS OWN REPO
+## Make sure we tell the topdir CMakeLists that we exist (if build from topdir)
+#get_directory_property(hasParent PARENT_DIRECTORY)
+#if(hasParent)
+#    set(PROJECT_${PROJECT_NAME} true PARENT_SCOPE)
+#endif()
+#include(PackageConfigurator)
