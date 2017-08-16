@@ -114,6 +114,8 @@ endif(BUILD_STANDALONE)
 
 add_subdirectory(doc)
 
+enable_testing()
+
 set(TEST_SRCS
   test/TestBasicThread.cxx
   test/testFifo.cxx
