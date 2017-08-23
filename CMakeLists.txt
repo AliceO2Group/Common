@@ -26,12 +26,12 @@ include(O2Utils)
 include(CommonDependencies)
 
 # Set the default build type to "RelWithDebInfo"
-if(NOT CMAKE_BUILD_TYPE)
+if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "RelWithDebInfo"
             CACHE
             STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel Coverage."
             FORCE)
-endif(NOT CMAKE_BUILD_TYPE)
+endif (NOT CMAKE_BUILD_TYPE)
 
 # Set the version number of your project here (format is MAJOR.MINOR.PATCHLEVEL - e.g. 1.0.0)
 set(VERSION_MAJOR "0")
@@ -56,7 +56,6 @@ ENDIF ()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra -fPIC")
 
 
-
 ####################################
 # Module, library and executable definition
 ####################################
@@ -66,18 +65,21 @@ set(MODULE_NAME "Common")
 O2_SETUP(NAME ${MODULE_NAME})
 
 set(SRCS
-  src/Daemon.cxx
-  src/Exception.cxx
-  src/Iommu.cxx
-  src/LineBuffer.cxx
-  src/Program.cxx
-  src/SimpleLog.cxx
-  src/SuffixNumber.cxx
-  src/System.cxx
-  src/Thread.cxx
-  src/Timer.cxx
-  src/Configuration.cxx
-  )
+        src/Daemon.cxx
+        src/Exception.cxx
+        src/Iommu.cxx
+        src/LineBuffer.cxx
+        src/Program.cxx
+        src/SimpleLog.cxx
+        src/SuffixNumber.cxx
+        src/System.cxx
+        src/Thread.cxx
+        src/Timer.cxx
+        src/Configuration.cxx
+        src/DataBlock.cxx
+        src/DataBlockContainer.cxx
+        src/MemPool.cxx
+        )
 
 # Produce the final Version.h using template Version.h.in and substituting variables.
 # We don't want to polute our source tree with it, thus putting it in binary tree.
@@ -87,7 +89,8 @@ configure_file("include/${MODULE_NAME}/Version.h.in"
         )
 
 include_directories(
-        ${CMAKE_CURRENT_BINARY_DIR}/include include ${Boost_INCLUDE_DIRS}
+        ${CMAKE_CURRENT_BINARY_DIR}/include
+        #        include ${Boost_INCLUDE_DIRS}
 )
 
 set(LIBRARY_NAME ${MODULE_NAME})
@@ -98,18 +101,18 @@ O2_GENERATE_LIBRARY()
 
 
 # Some extra targets to build when cmake -DBUILD_STANDALONE=1 ...
-if(BUILD_STANDALONE)
-foreach(modul Configuration Daemon LineBuffer SimpleLog Thread Timer)
-add_library(
-  objCommon${modul} OBJECT
-  src/${modul}.cxx
-)
-add_library(
-  Common${modul}
-  src/${modul}.cxx
-)
-endforeach(modul)
-endif(BUILD_STANDALONE)
+if (BUILD_STANDALONE)
+    foreach (modul Configuration Daemon LineBuffer SimpleLog Thread Timer)
+        add_library(
+                objCommon${modul} OBJECT
+                src/${modul}.cxx
+        )
+        add_library(
+                Common${modul}
+                src/${modul}.cxx
+        )
+    endforeach (modul)
+endif (BUILD_STANDALONE)
 
 
 add_subdirectory(doc)
@@ -117,38 +120,32 @@ add_subdirectory(doc)
 enable_testing()
 
 set(TEST_SRCS
-  test/TestBasicThread.cxx
-  test/testFifo.cxx
-  test/TestIommu.cxx
-  test/TestSuffixNumber.cxx
-  test/TestSuffixOption.cxx
-  test/TestSystem.cxx
-  test/testTimer.cxx
-  test/testDaemon.cxx
-)
+        test/TestBasicThread.cxx
+        test/testFifo.cxx
+        test/TestIommu.cxx
+        test/TestSuffixNumber.cxx
+        test/TestSuffixOption.cxx
+        test/TestSystem.cxx
+        test/testTimer.cxx
+        test/testDaemon.cxx
+        test/testDataFormat.c
+        test/testMemPool.cxx
+        )
 
 O2_GENERATE_TESTS(
- MODULE_LIBRARY_NAME ${LIBRARY_NAME}
- BUCKET_NAME ${BUCKET_NAME}
- TEST_SRCS ${TEST_SRCS}
- TIMEOUT 5 # seconds
+        MODULE_LIBRARY_NAME ${LIBRARY_NAME}
+        BUCKET_NAME ${BUCKET_NAME}
+        TEST_SRCS ${TEST_SRCS}
+        TIMEOUT 5 # seconds
 )
 
 # Library for Tcl
 # Usually we don't allow multiple libraries in O2 modules. This is an exception.
 if (TCL_FOUND)
-  set(SRCS
-      src/Configuration.cxx
-      src/Configuration_tcl_wrap.cxx
-  )
-  set(LIBRARY_NAME tclConfiguration)
-  O2_GENERATE_LIBRARY()
-endif()
-
-## TODO RECONSIDER THE THINGS BELOW AFTER EXTRACTION TO ITS OWN REPO
-## Make sure we tell the topdir CMakeLists that we exist (if build from topdir)
-#get_directory_property(hasParent PARENT_DIRECTORY)
-#if(hasParent)
-#    set(PROJECT_${PROJECT_NAME} true PARENT_SCOPE)
-#endif()
-#include(PackageConfigurator)
+    set(SRCS
+            src/Configuration.cxx
+            src/Configuration_tcl_wrap.cxx
+            )
+    set(LIBRARY_NAME tclConfiguration)
+    O2_GENERATE_LIBRARY()
+endif ()

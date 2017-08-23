@@ -18,3 +18,10 @@ o2_define_bucket(
   ${Boost_INCLUDE_DIRS}
 )
 
+o2_define_bucket(
+        NAME
+        o2_dataformat_bucket
+
+        SYSTEMINCLUDE_DIRECTORIES
+        ${Boost_INCLUDE_DIRS}
+)
