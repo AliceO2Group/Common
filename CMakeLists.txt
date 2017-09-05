@@ -90,6 +90,7 @@ configure_file("include/${MODULE_NAME}/Version.h.in"
 
 include_directories(
         ${CMAKE_CURRENT_BINARY_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
         #        include ${Boost_INCLUDE_DIRS}
 )
 
