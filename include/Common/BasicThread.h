@@ -8,6 +8,7 @@
 
 #include <atomic>
 #include <iostream>
+#include <functional>
 #include <stdexcept>
 #include <system_error>
 #include <string>
