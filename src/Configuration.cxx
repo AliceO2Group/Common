@@ -79,6 +79,12 @@ void ConfigFile::load(const std::string path)
   }
 }
 
+void ConfigFile::load(boost::property_tree::ptree const &tree) {
+  // copy input property_tree object
+  dPtr->pt=tree;
+}
+
+
 void getValueSpecialization(void) {
   ConfigFile f;
   const std::string s("");

@@ -38,7 +38,8 @@ class ConfigFile
     ConfigFile& operator=(const ConfigFile&) =delete;
 
 
-    /// Load the configuration from given path
+    /// Load the configuration from given path.
+    /// Existing ConfigFile data loaded previously is overwritten.
     /// \param path  Path to configuration data.
     ///              Example: file:/configDir/example.cfg
     ///              Accepted prefix:
@@ -47,6 +48,13 @@ class ConfigFile
     ///                 .ini, .cfg    see example.cfg
     /// \exception   Throws a <std::string> exception on error.
     void load(const std::string path);
+
+
+    /// Load the configuration directly from a given boost property_tree.
+    /// Existing ConfigFile data loaded previously is overwritten.
+    /// \param tree  boost property_tree object to be used as configuration input. It is copied.
+    /// \exception   Throws a <std::string> exception on error.
+    void load(boost::property_tree::ptree const &tree);
 
 
     /// Get the configuration value for given key path (by reference), failure causes exception.
