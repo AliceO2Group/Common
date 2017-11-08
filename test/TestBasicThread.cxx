@@ -1,6 +1,7 @@
 #include "Common/BasicThread.h"
 #include <chrono>
 #include <thread>
+#include <functional>
 
 #define BOOST_TEST_MODULE BasicThread
 #define BOOST_TEST_DYN_LINK
