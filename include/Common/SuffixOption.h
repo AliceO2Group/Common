@@ -76,7 +76,7 @@ class SuffixOption final : public boost::program_options::value_semantic
       return 16;
     }
 
-    virtual bool adjacent_tokens_only() const override
+    virtual bool adjacent_tokens_only() const //override // <-- for some reason it does not work on mac
     {
       return true;
     }
