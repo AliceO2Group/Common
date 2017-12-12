@@ -36,6 +36,7 @@ typedef struct {
   uint32_t      headerSize;     ///< header size in bytes
   uint32_t      dataSize;     ///< data size following this structure (until next header, if this is not a toplevel block header)
   DataBlockId   id;           ///< id of the block (monotonic increasing sequence)
+  uint32_t      linkId;       ///< id of link
 } DataBlockHeaderBase;
 
 
