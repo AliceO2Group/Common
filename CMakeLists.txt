@@ -148,5 +148,6 @@ if (TCL_FOUND)
             src/Configuration_tcl_wrap.cxx
             )
     set(LIBRARY_NAME tclConfiguration)
+    set(BUCKET_NAME tclConfiguration_bucket)
     O2_GENERATE_LIBRARY()
 endif ()
