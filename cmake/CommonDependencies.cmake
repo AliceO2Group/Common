@@ -24,3 +24,12 @@ o2_define_bucket(
         SYSTEMINCLUDE_DIRECTORIES
         ${Boost_INCLUDE_DIRS}
 )
+
+o2_define_bucket(
+        NAME
+        tclConfiguration_bucket
+
+        SYSTEMINCLUDE_DIRECTORIES
+        ${Boost_INCLUDE_DIRS}
+        ${TCL_INCLUDE_PATH}
+)
