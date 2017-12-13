@@ -4,23 +4,26 @@ find_package(TCL)
 
 
 o2_define_bucket(
-  NAME
-  o2_common_bucket
+    NAME
+    o2_common_bucket
 
-  DEPENDENCIES
-  ${Boost_PROGRAM_OPTIONS_LIBRARY}
-  ${Boost_FILESYSTEM_LIBRARY}
-  ${Boost_SYSTEM_LIBRARY}
-  pthread
+    DEPENDENCIES
+    ${Boost_PROGRAM_OPTIONS_LIBRARY}
+    ${Boost_FILESYSTEM_LIBRARY}
+    ${Boost_SYSTEM_LIBRARY}
+    pthread
 
-  SYSTEMINCLUDE_DIRECTORIES
-  ${Boost_INCLUDE_DIRS}
+    SYSTEMINCLUDE_DIRECTORIES
+    ${Boost_INCLUDE_DIRS}
 )
 
-o2_define_bucket(
-        NAME
-        o2_dataformat_bucket
 
-        SYSTEMINCLUDE_DIRECTORIES
-        ${Boost_INCLUDE_DIRS}
+
+o2_define_bucket(
+    NAME
+    o2_common_with_tcl_bucket
+
+    DEPENDENCIES
+    o2_common_bucket
+    ${TCL_LIBRARY}
 )
