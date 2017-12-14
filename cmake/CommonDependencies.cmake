@@ -26,4 +26,7 @@ o2_define_bucket(
     DEPENDENCIES
     o2_common_bucket
     ${TCL_LIBRARY}
+
+    SYSTEMINCLUDE_DIRECTORIES
+    ${TCL_INCLUDE_PATH}
 )
