@@ -15,7 +15,7 @@ namespace Common
 const char* Exception::what() const noexcept
 {
   try {
-    if (ato info = boost::get_error_info<ErrorInfo::Message>(*this)) {
+    if (auto info = boost::get_error_info<ErrorInfo::Message>(*this)) {
       return info->data();
     } else {
       return "AliceO2::Common::Exception";
