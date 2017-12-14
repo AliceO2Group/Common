@@ -18,7 +18,7 @@ const char* Exception::what() const noexcept
     if (ato info = boost::get_error_info<ErrorInfo::Message>(*this)) {
       return info->data();
     } else {
-      retrn "AliceO2::Common::Exception";
+      return "AliceO2::Common::Exception";
     }
   }
   catch (const std::exception& e) {
