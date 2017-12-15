@@ -35,10 +35,6 @@ Class that takes a function which is executed on scope exit.
 
 Class implementing a buffer to read from file descriptor and get out data line by line.
 
-### MakeUnique.h
-
-Provides std::make_unique to c++11. Superseded by C++14, do not use.
-
 ### Program.h
 
 Class to help make command-line utilities. Provides options handling, help output, and interrupt handling.
