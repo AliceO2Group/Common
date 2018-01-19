@@ -139,15 +139,3 @@ O2_GENERATE_TESTS(
         TEST_SRCS ${TEST_SRCS}
         TIMEOUT 5 # seconds
 )
-
-# Library for Tcl
-# Usually we don't allow multiple libraries in O2 modules. This is an exception.
-if (TCL_FOUND)
-    set(SRCS
-            src/Configuration.cxx
-            src/Configuration_tcl_wrap.cxx
-            )
-    set(LIBRARY_NAME tclConfiguration)
-    set(BUCKET_NAME o2_common_with_tcl_bucket)
-    O2_GENERATE_LIBRARY()
-endif ()
