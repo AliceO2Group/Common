@@ -128,7 +128,7 @@ set(TEST_SRCS
         test/TestSuffixOption.cxx
         test/TestSystem.cxx
         test/testTimer.cxx
-        test/testDaemon.cxx
+#        test/testDaemon.cxx # not a test
         test/testDataFormat.c
         test/testMemPool.cxx
         )
