@@ -60,7 +60,6 @@ class Thread {
     
   private:
     std::chrono::time_point<std::chrono::high_resolution_clock> t0; // time of reset
-    double tmax; // duration between reset and timeout condition, in seconds
 };
 
 } // namespace Common
