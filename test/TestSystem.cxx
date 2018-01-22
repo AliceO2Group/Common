@@ -49,10 +49,12 @@ BOOST_AUTO_TEST_CASE(TestExecuteCommand)
 
 BOOST_AUTO_TEST_CASE(TestTouchFile)
 {
+#ifdef __linux__
   auto path = "/tmp/touched_file";
   boost::filesystem::remove(path);
   System::touchFile("/tmp/touched_file");
   BOOST_CHECK(boost::filesystem::exists(path));
+#endif
 }
 
 BOOST_AUTO_TEST_CASE(TestGetFileSystemType)

@@ -28,15 +28,28 @@ void setSigIntHandler(void(*function)(int))
   struct sigaction sa;
   memset(&sa, 0, sizeof(sa));
   sa.sa_handler = function;
-  sigfillset(&sa.sa_mask);
-  sigaction(SIGINT, &sa, NULL);
+  if (sigfillset(&sa.sa_mask) == -1) {
+    int err = errno;
+    throw std::runtime_error((b::format("sigfillset returned error (%d)") % err).str());
+  }
+  if (sigaction(SIGINT, &sa, NULL) == -1) {
+    int err = errno;
+    throw std::runtime_error((b::format("sigaction returned error (%d) while setting sigint handler") % err).str());
+  }
 }
 
 bool isSigIntHandlerSet()
 {
   struct sigaction sa;
-  sigaction(SIGINT, NULL, &sa);
-  return sa.sa_flags != 0;
+  if (sigaction(SIGINT, NULL, &sa) == -1) {
+    int err = errno;
+    throw std::runtime_error((b::format("sigaction returned error (%d) while getting sigint handler") % err).str());
+  }
+#ifdef __APPLE__
+  return sa.sa_handler != SIG_DFL && sa.sa_handler != SIG_IGN;
+#else
+  return sa.__sigaction_handler.sa_handler != SIG_DFL && sa.__sigaction_handler.sa_handler != SIG_IGN;
+#endif
 }
 
 void makeParentDirectories(const std::string& path)
