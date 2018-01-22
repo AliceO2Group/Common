@@ -57,14 +57,21 @@ BOOST_AUTO_TEST_CASE(TestTouchFile)
 
 BOOST_AUTO_TEST_CASE(TestGetFileSystemType)
 {
+#ifdef __linux__
   BOOST_CHECK(System::getFileSystemType("/sys") == "sysfs");
   BOOST_CHECK(System::getFileSystemType("/proc") == "proc");
   BOOST_CHECK(System::getFileSystemType("/dev") == "devtmpfs");
   BOOST_CHECK(System::getFileSystemType("/dev/shm") == "tmpfs");
+#endif
+#ifdef __APPLE__
+  BOOST_CHECK(System::getFileSystemType("/dev") == "devfs");
+#endif
 }
 
 BOOST_AUTO_TEST_CASE(TestIsFileSystemTypeAnyOf)
 {
+#ifdef __linux__
   BOOST_CHECK(System::isFileSystemTypeAnyOf("/sys", {"sysfs", "ext4", "tmpfs"}).first == true);
   BOOST_CHECK(System::isFileSystemTypeAnyOf("/sys", {"blahfs", "ext42"}).first == false);
+#endif
 }

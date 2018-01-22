@@ -71,13 +71,16 @@ std::string executeCommand(const std::string& command)
 std::string getFileSystemType(const std::string& path)
 {
   std::string type {""};
-  std::string result = executeCommand(b::str(b::format("df --output=fstype %s") % path.c_str()));
+  std::string result = executeCommand(b::str(b::format("df %s") % path));
 
-  // We need the second like of the output (first line is a header)
+  // We need the second line of the output (first line is a header)
   std::vector<std::string> splitted;
   boost::split(splitted, result, boost::is_any_of("\n"));
   if (splitted.size() == 3) {
-    type = splitted.at(1);
+    // Then get the first "column" of the second line, which contains the file system type
+    std::string line = splitted.at(1);
+    boost::split(splitted, line, boost::is_any_of(" "));
+    type = splitted.at(0);
   } else {
     BOOST_THROW_EXCEPTION(std::runtime_error("Unrecognized output from 'df' command"));
   }
