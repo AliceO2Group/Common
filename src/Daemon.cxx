@@ -2,8 +2,9 @@
 
 #include <stdio.h>
 #include <unistd.h>
-#include <string.h>
-#include <errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <signal.h>
 #include <sys/types.h>
 #include <pwd.h>
@@ -16,6 +17,49 @@ static void signalHandler(int){
   DaemonsShutdownRequest=1;
 }
 
+// this function is a replacement of the Linux glibc daemon() function, reported deprecated on MacOS
+// if flag closeFiles is set, stdin/stdout/stderr are redirected to /dev/null
+// returns 0 on success, an error code otherwise
+int createDaemon(int closeFiles) {
+
+  // fork process
+  switch (fork()) {
+    case -1:
+    // failure
+    return __LINE__;
+
+    case 0:
+    // child
+    break;
+    
+    default:
+    // terminate calling process immediately
+    _exit(0);
+  }
+
+  // create a new session to avoid being killed e.g. on closing parent terminal
+  if (setsid() == -1) {
+    return __LINE__;
+  }
+  
+  // redirect stdout/stderr to /dev/null if requested to do so
+  #define REDIRECT_PATH "/dev/null"
+  if (closeFiles) {
+    int fd=open(REDIRECT_PATH, O_RDWR, 0);
+    if (fd==-1) {
+      return __LINE__;
+    }
+    dup2(fd, STDIN_FILENO);
+    dup2(fd, STDOUT_FILENO);
+    dup2(fd, STDERR_FILENO);
+    if (fd>2) {
+      close(fd);
+    } else {
+      return __LINE__;
+    }
+  }
+  return 0;
+}
 
 Daemon::Daemon(int argc, char * argv[], DaemonConfigParameters *dConfigParams) {
   isInitialized=0;
@@ -94,10 +138,11 @@ Daemon::Daemon(int argc, char * argv[], DaemonConfigParameters *dConfigParams) {
 
     // become a daemon, if configured to do so
     if (!params.isInteractive) {
-      if(daemon(1,~params.redirectOutput) == -1){
-        log.error("Could not become daemon: %s",strerror(errno));
+      int err=createDaemon(params.redirectOutput);
+      if (err) {
+        log.error("Could not become daemon: error %d",err);
         throw __LINE__;
-      }      
+      }
     }
     log.info("Started PID %d",getpid());
 
