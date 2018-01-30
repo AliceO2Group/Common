@@ -45,11 +45,7 @@ bool isSigIntHandlerSet()
     int err = errno;
     throw std::runtime_error((b::format("sigaction returned error (%d) while getting sigint handler") % err).str());
   }
-#ifdef __APPLE__
   return sa.sa_handler != SIG_DFL && sa.sa_handler != SIG_IGN;
-#else
-  return sa.__sigaction_handler.sa_handler != SIG_DFL && sa.__sigaction_handler.sa_handler != SIG_IGN;
-#endif
 }
 
 void makeParentDirectories(const std::string& path)
