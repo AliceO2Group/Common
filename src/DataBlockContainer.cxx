@@ -3,10 +3,17 @@
 
 // base DataBlockContainer class
 
-DataBlockContainer::DataBlockContainer(DataBlock *v_data) : data(v_data) {
+DataBlockContainer::DataBlockContainer(DataBlock *v_data) : data(v_data), releaseCallback(nullptr) {
+}
+
+DataBlockContainer::DataBlockContainer(ReleaseCallback v_callback, DataBlock *v_data)
+: data(v_data), releaseCallback(v_callback) {
 }
 
 DataBlockContainer::~DataBlockContainer() {
+ if (releaseCallback != nullptr) {
+    releaseCallback();
+  }
 }
 
 DataBlock * DataBlockContainer::getData() {
