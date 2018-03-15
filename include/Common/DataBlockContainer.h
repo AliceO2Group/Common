@@ -6,6 +6,7 @@
 
 #include <stdlib.h>
 #include <memory>
+#include <functional>
 
 // A container class for data blocks.
 // In particular, allows to take care of the block release after use.
@@ -17,8 +18,15 @@ class DataBlockContainer {
   virtual ~DataBlockContainer();
   DataBlock *getData();
 
+  using ReleaseCallback = std::function<void(void)>;
+  // NB: may use std::bind to add extra arguments
+  
+  // this constructor allows to specify a callback which is invoked when container is destroyed
+  DataBlockContainer(ReleaseCallback callback, DataBlock *v_data=NULL);
+
   protected:
   DataBlock *data;
+  ReleaseCallback releaseCallback;
 };
 
 

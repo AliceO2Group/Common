@@ -4,6 +4,8 @@
 /// \author Sylvain Chapeland, CERN
 
 #include "Common/MemPool.h"
+#include "Common/DataBlockContainer.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <vector>
@@ -81,6 +83,13 @@ int main() {
     printf("%d errors\n",nErr);
   }
 
+  DataBlockContainer *bc=nullptr;
+  auto releaseCallback = [bc] (void) -> void {
+    printf("release callback for %p\n",bc);
+    return;
+  };
+  bc=new DataBlockContainer(releaseCallback,nullptr);
+  delete bc;
 
   printf("Delete pool\n");
   delete mp;
