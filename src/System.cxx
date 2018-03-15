@@ -28,15 +28,24 @@ void setSigIntHandler(void(*function)(int))
   struct sigaction sa;
   memset(&sa, 0, sizeof(sa));
   sa.sa_handler = function;
-  sigfillset(&sa.sa_mask);
-  sigaction(SIGINT, &sa, NULL);
+  if (sigfillset(&sa.sa_mask) == -1) {
+    int err = errno;
+    throw std::runtime_error((b::format("sigfillset returned error (%d)") % err).str());
+  }
+  if (sigaction(SIGINT, &sa, NULL) == -1) {
+    int err = errno;
+    throw std::runtime_error((b::format("sigaction returned error (%d) while setting sigint handler") % err).str());
+  }
 }
 
 bool isSigIntHandlerSet()
 {
   struct sigaction sa;
-  sigaction(SIGINT, NULL, &sa);
-  return sa.sa_flags != 0;
+  if (sigaction(SIGINT, NULL, &sa) == -1) {
+    int err = errno;
+    throw std::runtime_error((b::format("sigaction returned error (%d) while getting sigint handler") % err).str());
+  }
+  return sa.sa_handler != SIG_DFL && sa.sa_handler != SIG_IGN;
 }
 
 void makeParentDirectories(const std::string& path)
@@ -71,13 +80,16 @@ std::string executeCommand(const std::string& command)
 std::string getFileSystemType(const std::string& path)
 {
   std::string type {""};
-  std::string result = executeCommand(b::str(b::format("df --output=fstype %s") % path.c_str()));
+  std::string result = executeCommand(b::str(b::format("df %s") % path));
 
-  // We need the second like of the output (first line is a header)
+  // We need the second line of the output (first line is a header)
   std::vector<std::string> splitted;
   boost::split(splitted, result, boost::is_any_of("\n"));
   if (splitted.size() == 3) {
-    type = splitted.at(1);
+    // Then get the first "column" of the second line, which contains the file system type
+    std::string line = splitted.at(1);
+    boost::split(splitted, line, boost::is_any_of(" "));
+    type = splitted.at(0);
   } else {
     BOOST_THROW_EXCEPTION(std::runtime_error("Unrecognized output from 'df' command"));
   }
