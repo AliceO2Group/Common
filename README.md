@@ -1,6 +1,6 @@
 # Common module
 
-[![](http://ali-ci.cern.ch/repo/buildstatus/AliceO2Group/Common/master/build_O2_Common_macos.svg)](https://ali-ci.cern.ch/repo/logs/AliceO2Group/Common/master/latest/build_O2_Common_macos/fullLog.txt)
+[![](http://ali-ci.cern.ch/repo/buildstatus/AliceO2Group/Common/master/build_O2_Common_macos.svg?test)](https://ali-ci.cern.ch/repo/logs/AliceO2Group/Common/master/latest/build_O2_Common_macos/fullLog.txt)
 
 This module contains reusable code shared between other modules,
 and provides various features.
