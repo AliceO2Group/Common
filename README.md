@@ -1,6 +1,7 @@
 # Common module
 
 [![](http://ali-ci.cern.ch/repo/buildstatus/AliceO2Group/Common/master/build_O2_Common_macos.svg)](https://ali-ci.cern.ch/repo/logs/AliceO2Group/Common/master/latest/build_O2_Common_macos/fullLog.txt)
+[![JIRA](https://img.shields.io/badge/JIRA-Report%20issue-blue.svg)](https://alice.its.cern.ch/jira/secure/CreateIssue.jspa?pid=11201&issuetype=1)
 
 This module contains reusable code shared between other modules,
 and provides various features.
