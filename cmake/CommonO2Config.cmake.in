@@ -1,0 +1,22 @@
+# CommonO2Config.cmake -- Where to find the CommonO2 package
+# Blame: Dario Berzano <dario.berzano@cern.ch>
+
+set(_IMPORT_NAMESPACE "CommonO2")
+
+# Get prefix for the package (this file is under <prefix>/share/cmake, we run
+# get_filename_component as many times as necesary to get the root)
+get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)
+if(_IMPORT_PREFIX STREQUAL "/")
+  set(_IMPORT_PREFIX "")
+endif()
+
+add_library(${_IMPORT_NAMESPACE}::Common SHARED IMPORTED)
+set_target_properties(${_IMPORT_NAMESPACE}::Common PROPERTIES
+  INTERFACE_INCLUDE_DIRECTORIES "${_IMPORT_PREFIX}/include"
+  IMPORTED_LOCATION             "${_IMPORT_PREFIX}/lib/@CMAKE_SHARED_LIBRARY_PREFIX@Common@CMAKE_SHARED_LIBRARY_SUFFIX@")
+
+# Cleanup after ourselves
+unset(_IMPORT_NAMESPACE)
+unset(_IMPORT_PREFIX)

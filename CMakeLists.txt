@@ -151,3 +151,11 @@ if (TCL_FOUND)
     set(BUCKET_NAME o2_common_with_tcl_bucket)
     O2_GENERATE_LIBRARY()
 endif ()
+
+# Generate CommonConfig.cmake so that other projects can link to it. We are not
+# using the standard CMake method to define them because of relocation issues
+configure_file(cmake/CommonO2Config.cmake.in   # under source prefix
+               cmake/CommonO2Config.cmake      # under build prefix
+               @ONLY)
+install(FILES ${CMAKE_BINARY_DIR}/cmake/CommonO2Config.cmake
+        DESTINATION share/cmake)
