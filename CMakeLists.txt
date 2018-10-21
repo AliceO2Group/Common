@@ -26,6 +26,10 @@ find_package(Boost 1.56
                         REQUIRED)
 find_package(TCL)
 
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+find_package(Threads REQUIRED)
+
 add_library(Common
             SHARED
             src/Daemon.cxx
@@ -50,8 +54,10 @@ configure_file("include/Common/Version.h.in"
                "${CMAKE_CURRENT_BINARY_DIR}/include/Common/Version.h" @ONLY)
 
 target_link_libraries(Common
-                      PUBLIC Boost::boost Boost::filesystem
-                             Boost::program_options)
+                      PUBLIC Boost::boost
+                             Boost::filesystem
+                             Boost::program_options
+                             Threads::Threads)
 target_include_directories(
   Common
   PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
@@ -74,6 +80,7 @@ enable_testing()
 
 add_executable(testDataFormat test/testDataFormat.c)
 target_link_libraries(testDataFormat Common)
+set_source_files_properties(test/testDataFormat.c PROPERTIES LANGUAGE CXX)
 add_test(testDataFormat testDataFormat)
 
 add_executable(testTimer test/testTimer.cxx)
@@ -130,4 +137,4 @@ configure_package_config_file(cmake/CommonConfig.cmake.in
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CommonConfig.cmake
               ${CMAKE_CURRENT_BINARY_DIR}/CommonConfigVersion.cmake
-              DESTINATION lib/cmake/Common)
+        DESTINATION lib/cmake/Common)
