@@ -13,13 +13,13 @@
 namespace AliceO2 {
 namespace Common {
 /// The current major version.
-#define HELLO_VERSION_MAJOR @VERSION_MAJOR@
+#define HELLO_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
 
 /// The current minor version.
-#define HELLO_VERSION_MINOR @VERSION_MINOR@
+#define HELLO_VERSION_MINOR @PROJECT_VERSION_MINOR@
 
 /// The current patch level.
-#define HELLO_VERSION_PATCH @VERSION_PATCH@
+#define HELLO_VERSION_PATCH @PROJECT_VERSION_PATCH@
 
 /// The current VCS revision.
 #define HELLO_VCS_REVISION "@VCS_REVISION@"

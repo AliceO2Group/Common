@@ -1,153 +1,133 @@
-####################################
-# General project definition
-####################################
+cmake_minimum_required(VERSION 3.5.2 FATAL_ERROR)
 
-CMAKE_MINIMUM_REQUIRED(VERSION 3.5.2 FATAL_ERROR)
+project(Common VERSION 0.0.0 LANGUAGES C CXX)
 
-### CMP0025   Compiler id for Apple Clang is now AppleClang.
-### CMP0042   MACOSX_RPATH is enabled by default.
-
-FOREACH (p
-        CMP0025 # CMake 3.0
-        CMP0042 # CMake 3.0
-        )
-    IF (POLICY ${p})
-        cmake_policy(SET ${p} NEW)
-    ENDIF ()
-endforeach ()
-
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake) # project specific cmake dir
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/../cmake)
-
-project(Common)
-
-# Load some basic macros which are needed later on
-include(O2Utils)
-include(CommonDependencies)
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 17)
+endif()
 
 # Set the default build type to "RelWithDebInfo"
-if (NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "RelWithDebInfo"
-            CACHE
-            STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel Coverage."
-            FORCE)
-endif (NOT CMAKE_BUILD_TYPE)
-
-# Set the version number of your project here (format is MAJOR.MINOR.PATCHLEVEL - e.g. 1.0.0)
-set(VERSION_MAJOR "0")
-set(VERSION_MINOR "0")
-set(VERSION_PATCH "0")
-set(VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
-
-# C++14
-IF (CMAKE_VERSION VERSION_LESS 3.1)
-    include(CheckCXXCompilerFlag)
-    CHECK_CXX_COMPILER_FLAG(-std=c++14 COMPILER_SUPPORTS_CXX14)
-    if (COMPILER_SUPPORTS_CXX14)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
-    else ()
-        message(ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++14 support. Please use a different C++ compiler.")
-    endif ()
-ELSE ()
-    set(CMAKE_CXX_STANDARD 14)  # proper way in CMake >= 3.1
-ENDIF ()
+if(NOT CMAKE_BUILD_TYPE)
+  set(
+    CMAKE_BUILD_TYPE "RelWithDebInfo"
+    CACHE
+      STRING
+      "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel Coverage."
+    FORCE)
+endif(NOT CMAKE_BUILD_TYPE)
 
 # Add compiler flags for warnings and (more importantly) fPIC and debug symbols
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra -fPIC")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra -fPIC")
 
+find_package(Boost 1.56
+             COMPONENTS unit_test_framework
+                        program_options
+                        filesystem
+                        REQUIRED)
+find_package(TCL)
 
-####################################
-# Module, library and executable definition
-####################################
+add_library(Common
+            SHARED
+            src/Daemon.cxx
+            src/Exception.cxx
+            src/Iommu.cxx
+            src/LineBuffer.cxx
+            src/Program.cxx
+            src/SimpleLog.cxx
+            src/SuffixNumber.cxx
+            src/System.cxx
+            src/Thread.cxx
+            src/Timer.cxx
+            src/Configuration.cxx
+            src/DataBlock.cxx
+            src/DataBlockContainer.cxx
+            src/MemPool.cxx)
 
-set(MODULE_NAME "Common")
+# Produce the final Version.h using template Version.h.in and substituting
+# variables. We don't want to pollute our source tree with it, thus we put it in
+# the build tree.
+configure_file("include/Common/Version.h.in"
+               "${CMAKE_CURRENT_BINARY_DIR}/include/Common/Version.h" @ONLY)
 
-O2_SETUP(NAME ${MODULE_NAME})
-
-set(SRCS
-        src/Daemon.cxx
-        src/Exception.cxx
-        src/Iommu.cxx
-        src/LineBuffer.cxx
-        src/Program.cxx
-        src/SimpleLog.cxx
-        src/SuffixNumber.cxx
-        src/System.cxx
-        src/Thread.cxx
-        src/Timer.cxx
-        src/Configuration.cxx
-        src/DataBlock.cxx
-        src/DataBlockContainer.cxx
-        src/MemPool.cxx
-        )
-
-# Produce the final Version.h using template Version.h.in and substituting variables.
-# We don't want to polute our source tree with it, thus putting it in binary tree.
-configure_file("include/${MODULE_NAME}/Version.h.in"
-        "${CMAKE_CURRENT_BINARY_DIR}/include/${MODULE_NAME}/Version.h"
-        @ONLY
-        )
-
-include_directories(
-        ${CMAKE_CURRENT_BINARY_DIR}/include
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
-        #        include ${Boost_INCLUDE_DIRS}
-)
-
-set(LIBRARY_NAME ${MODULE_NAME})
-
-set(BUCKET_NAME o2_common_bucket)
-
-O2_GENERATE_LIBRARY()
-
+target_link_libraries(Common
+                      PUBLIC Boost::boost Boost::filesystem
+                             Boost::program_options)
+target_include_directories(
+  Common
+  PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+         $<INSTALL_INTERFACE:include>)
 
 # Some extra targets to build when cmake -DBUILD_STANDALONE=1 ...
-if (BUILD_STANDALONE)
-    foreach (modul Configuration Daemon LineBuffer SimpleLog Thread Timer)
-        add_library(
-                objCommon${modul} OBJECT
-                src/${modul}.cxx
-        )
-        add_library(
-                Common${modul}
-                src/${modul}.cxx
-        )
-    endforeach (modul)
-endif (BUILD_STANDALONE)
-
+if(BUILD_STANDALONE)
+  foreach(modul Configuration Daemon LineBuffer SimpleLog Thread Timer)
+    # add_library(objCommon${modul} OBJECT src/${modul}.cxx)
+    # target_link_libraries(objCommon${modul} PRIVATE Common)
+    add_library(Common${modul} src/${modul}.cxx)
+    target_link_libraries(Common${modul} PRIVATE Common)
+  endforeach(modul)
+endif(BUILD_STANDALONE)
 
 add_subdirectory(doc)
 
 enable_testing()
 
-set(TEST_SRCS
-        test/TestBasicThread.cxx
-        test/testFifo.cxx
-        test/TestIommu.cxx
-        test/TestSuffixNumber.cxx
-        test/TestSuffixOption.cxx
-        test/TestSystem.cxx
-        test/testTimer.cxx
-#        test/testDaemon.cxx # not a test
-        test/testDataFormat.c
-        test/testMemPool.cxx
-        )
+add_executable(testDataFormat test/testDataFormat.c)
+target_link_libraries(testDataFormat Common)
+add_test(testDataFormat testDataFormat)
 
-O2_GENERATE_TESTS(
-        MODULE_LIBRARY_NAME ${LIBRARY_NAME}
-        BUCKET_NAME ${BUCKET_NAME}
-        TEST_SRCS ${TEST_SRCS}
-        TIMEOUT 5 # seconds
-)
+add_executable(testTimer test/testTimer.cxx)
+target_link_libraries(testTimer Common Boost::unit_test_framework)
+add_test(testTimer testTimer)
 
-# Library for Tcl
-# Usually we don't allow multiple libraries in O2 modules. This is an exception.
-if (TCL_FOUND)
-    set(SRCS
-            src/Configuration.cxx
-            src/Configuration_tcl_wrap.cxx
-            )
-    set(LIBRARY_NAME tclConfiguration)
-    set(BUCKET_NAME o2_common_with_tcl_bucket)
-    O2_GENERATE_LIBRARY()
-endif ()
+foreach(BTEST
+        TestBasicThread
+        testFifo
+        TestIommu
+        TestSuffixNumber
+        TestSuffixOption
+        TestSystem
+        testMemPool)
+  add_executable(${BTEST} test/${BTEST}.cxx)
+  target_link_libraries(${BTEST} Common Boost::unit_test_framework)
+  add_test(${BTEST} ${BTEST})
+endforeach()
+
+# Library for Tcl. Usually we don't allow multiple libraries in O2 modules. This
+# is an exception.
+if(TCL_FOUND)
+  add_library(libtclConfiguration
+              SHARED
+              src/Configuration.cxx
+              src/Configuration_tcl_wrap.cxx)
+  target_link_libraries(libtclConfiguration PUBLIC Boost::boost ${TCL_LIBRARY})
+  target_include_directories(
+    libtclConfiguration
+    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+           $<INSTALL_INTERFACE:include>)
+endif()
+
+# Installation of targets and relevant files for other cmake packages that will
+# depend on us
+install(TARGETS Common EXPORT CommonTargets LIBRARY DESTINATION lib)
+
+install(DIRECTORY include/ DESTINATION include)
+
+install(EXPORT CommonTargets
+        FILE CommonTargets.cmake
+        NAMESPACE Common::
+        DESTINATION lib/cmake/Common)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(CommonConfigVersion.cmake
+                                 VERSION ${Common_VERSION}
+                                 COMPATIBILITY SameMajorVersion)
+configure_package_config_file(cmake/CommonConfig.cmake.in
+                              ${CMAKE_CURRENT_BINARY_DIR}/CommonConfig.cmake
+                              INSTALL_DESTINATION
+                              lib/cmake/Common)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CommonConfig.cmake
+              ${CMAKE_CURRENT_BINARY_DIR}/CommonConfigVersion.cmake
+              DESTINATION lib/cmake/Common)

@@ -1,0 +1,6 @@
+@PACKAGE_INIT@
+include(CMakeFindDependencyMacro) 
+set_and_check(BOOST_ROOT @BOOST_ROOT@)
+find_dependency(Boost 1.56 COMPONENTS unit_test_framework program_options filesystem)
+find_dependency(TCL)
+include("${CMAKE_CURRENT_LIST_DIR}/CommonTargets.cmake")
