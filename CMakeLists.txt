@@ -105,30 +105,6 @@ endif(BUILD_STANDALONE)
 
 add_subdirectory(doc)
 
-enable_testing()
-
-add_executable(testDataFormat test/testDataFormat.c)
-target_link_libraries(testDataFormat Common)
-set_source_files_properties(test/testDataFormat.c PROPERTIES LANGUAGE CXX)
-add_test(testDataFormat testDataFormat)
-
-add_executable(testTimer test/testTimer.cxx)
-target_link_libraries(testTimer Common Boost::unit_test_framework)
-add_test(testTimer testTimer)
-
-foreach(BTEST
-        TestBasicThread
-        testFifo
-        TestIommu
-        TestSuffixNumber
-        TestSuffixOption
-        TestSystem
-        testMemPool)
-  add_executable(${BTEST} test/${BTEST}.cxx)
-  target_link_libraries(${BTEST} Common Boost::unit_test_framework)
-  add_test(${BTEST} ${BTEST})
-endforeach()
-
 # Library for Tcl. Usually we don't allow multiple libraries in O2 modules. This
 # is an exception.
 if(TCL_FOUND)
@@ -143,6 +119,42 @@ if(TCL_FOUND)
            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
            $<INSTALL_INTERFACE:include>)
 endif()
+
+####################################
+# Tests
+####################################
+enable_testing()
+
+add_executable(testDataFormat test/testDataFormat.c)
+target_link_libraries(testDataFormat Common)
+set_source_files_properties(test/testDataFormat.c PROPERTIES LANGUAGE CXX)
+add_test(NAME testDataFormat COMMAND testDataFormat)
+set_tests_properties(testDataFormat PROPERTIES TIMEOUT 60)
+
+set(TEST_SRCS
+  test/TestBasicThread.cxx
+  test/testFifo.cxx
+  test/TestIommu.cxx
+  test/TestSuffixNumber.cxx
+  test/TestSuffixOption.cxx
+  test/TestSystem.cxx
+  test/testMemPool.cxx
+  test/testTimer.cxx
+)
+
+foreach (test ${TEST_SRCS})
+  get_filename_component(test_name ${test} NAME)
+  string(REGEX REPLACE ".cxx" "" test_name ${test_name})
+
+  add_executable(${test_name} ${test})
+  target_link_libraries(${test_name}
+    PRIVATE
+      Common Boost::unit_test_framework
+  )
+  add_test(NAME ${test_name} COMMAND ${test_name})
+  set_tests_properties(${test_name} PROPERTIES TIMEOUT 60)
+endforeach()
+
 
 ####################################
 # Install
