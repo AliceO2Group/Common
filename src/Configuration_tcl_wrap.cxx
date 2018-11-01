@@ -163,7 +163,7 @@ template <typename T> T SwigValueInit() {
 
 
 #include <stdio.h>
-#include <tcl.h>
+#include <tcl/tcl.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <stdarg.h>
