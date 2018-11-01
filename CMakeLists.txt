@@ -1,6 +1,17 @@
 cmake_minimum_required(VERSION 3.5.2 FATAL_ERROR)
 
-project(Common VERSION 0.0.0 LANGUAGES C CXX)
+# Set cmake policy by version: https://cmake.org/cmake/help/latest/manual/cmake-policies.7.html
+if(${CMAKE_VERSION} VERSION_LESS 3.12)
+    cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
+else()
+    cmake_policy(VERSION 3.12)
+endif()
+
+project(Common
+  VERSION 0.0.0
+  DESCRIPTION "O2 Common library"
+  LANGUAGES C CXX
+)
 
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 17)
@@ -17,18 +28,36 @@ if(NOT CMAKE_BUILD_TYPE)
 endif(NOT CMAKE_BUILD_TYPE)
 
 # Add compiler flags for warnings and (more importantly) fPIC and debug symbols
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra -fPIC")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra")
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+# Set CMAKE_INSTALL_LIBDIR explicitly to lib (to avoid lib64 on CC7)
+set(CMAKE_INSTALL_LIBDIR lib)
+
+####################################
+# Dependencies
+####################################
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 find_package(Boost 1.56
-             COMPONENTS unit_test_framework
-                        program_options
-                        filesystem
-                        REQUIRED)
+  COMPONENTS unit_test_framework
+             program_options
+             filesystem
+             REQUIRED)
 find_package(TCL)
 
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 find_package(Threads REQUIRED)
+
+####################################
+# Library
+####################################
+
+set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}/lib")
+set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
+set(INCLUDE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/include")
 
 add_library(Common
             SHARED
@@ -115,26 +144,48 @@ if(TCL_FOUND)
            $<INSTALL_INTERFACE:include>)
 endif()
 
-# Installation of targets and relevant files for other cmake packages that will
-# depend on us
-install(TARGETS Common EXPORT CommonTargets LIBRARY DESTINATION lib)
+####################################
+# Install
+####################################
 
-install(DIRECTORY include/ DESTINATION include)
+include(GNUInstallDirs)
+
+# Build targets with install rpath on Mac to dramatically speed up installation
+# https://gitlab.kitware.com/cmake/community/wikis/doc/cmake/RPATH-handling
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}" isSystemDir)
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+  if("${isSystemDir}" STREQUAL "-1")
+    set(CMAKE_INSTALL_RPATH "@loader_path/../${CMAKE_INSTALL_LIBDIR}")
+  endif()
+  set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+endif()
+unset(isSystemDir)
+
+# Install library
+install(TARGETS Common
+  EXPORT CommonTargets
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+
+# Install headers
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/Common DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 
 install(EXPORT CommonTargets
         FILE CommonTargets.cmake
-        NAMESPACE Common::
-        DESTINATION lib/cmake/Common)
+        NAMESPACE AliceO2::
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/Common")
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(CommonConfigVersion.cmake
                                  VERSION ${Common_VERSION}
                                  COMPATIBILITY SameMajorVersion)
 configure_package_config_file(cmake/CommonConfig.cmake.in
-                              ${CMAKE_CURRENT_BINARY_DIR}/CommonConfig.cmake
+                              "${CMAKE_CURRENT_BINARY_DIR}/CommonConfig.cmake"
                               INSTALL_DESTINATION
-                              lib/cmake/Common)
+                              "${CMAKE_INSTALL_LIBDIR}/cmake/Common")
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/CommonConfig.cmake
               ${CMAKE_CURRENT_BINARY_DIR}/CommonConfigVersion.cmake
-        DESTINATION lib/cmake/Common)
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Common)

@@ -1,6 +1,15 @@
 @PACKAGE_INIT@
 include(CMakeFindDependencyMacro) 
-set_and_check(BOOST_ROOT @BOOST_ROOT@)
-find_dependency(Boost 1.56 COMPONENTS unit_test_framework program_options filesystem)
-find_dependency(Threads)
-include("${CMAKE_CURRENT_LIST_DIR}/CommonTargets.cmake")
+get_filename_component(Common_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+list(APPEND CMAKE_MODULE_PATH ${Common_CMAKE_DIR})
+
+find_dependency(Boost 1.56 REQUIRED COMPONENTS unit_test_framework program_options filesystem)
+find_dependency(Threads REQUIRED)
+
+list(REMOVE_AT CMAKE_MODULE_PATH -1)
+
+if(NOT TARGET AliceO2::Common)
+  include("${Common_CMAKE_DIR}/CommonTargets.cmake")
+endif()
+
+set(Common_LIBRARIES AliceO2::Common)
