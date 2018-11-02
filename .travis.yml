@@ -23,6 +23,7 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo ./b2 -j 4 install > /dev/null 2>&1; cd $TRAVIS_BUILD_DIR; fi
 before_script: 
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sed -i -e 's/<tcl.h>/<tcl\/tcl.h>/g' src/Configuration_tcl_wrap.cxx; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sed -i -e 's/test\/TestSystem.cxx//g' CMakeLists.txt; fi
   - mkdir build; cd build
 script:
   - cmake ..
