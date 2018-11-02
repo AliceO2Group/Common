@@ -45,7 +45,7 @@ find_package(Boost 1.56
              program_options
              filesystem
              REQUIRED)
-find_package(TCL)
+
 
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
@@ -105,20 +105,6 @@ endif(BUILD_STANDALONE)
 
 add_subdirectory(doc)
 
-# Library for Tcl. Usually we don't allow multiple libraries in O2 modules. This
-# is an exception.
-if(TCL_FOUND)
-  add_library(libtclConfiguration
-              SHARED
-              src/Configuration.cxx
-              src/Configuration_tcl_wrap.cxx)
-  target_link_libraries(libtclConfiguration PUBLIC Boost::boost ${TCL_LIBRARY})
-  target_include_directories(
-    libtclConfiguration
-    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
-           $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-           $<INSTALL_INTERFACE:include>)
-endif()
 
 ####################################
 # Tests
