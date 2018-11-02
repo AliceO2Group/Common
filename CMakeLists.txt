@@ -93,15 +93,6 @@ target_include_directories(
          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
          $<INSTALL_INTERFACE:include>)
 
-# Some extra targets to build when cmake -DBUILD_STANDALONE=1 ...
-if(BUILD_STANDALONE)
-  foreach(modul Configuration Daemon LineBuffer SimpleLog Thread Timer)
-    # add_library(objCommon${modul} OBJECT src/${modul}.cxx)
-    # target_link_libraries(objCommon${modul} PRIVATE Common)
-    add_library(Common${modul} src/${modul}.cxx)
-    target_link_libraries(Common${modul} PRIVATE Common)
-  endforeach(modul)
-endif(BUILD_STANDALONE)
 
 add_subdirectory(doc)
 
