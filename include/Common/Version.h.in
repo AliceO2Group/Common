@@ -4,8 +4,8 @@
 /// @author  Barthélémy von Haller
 ///
 
-#ifndef COMMON_HELLO_VERSION_H
-#define COMMON_HELLO_VERSION_H
+#ifndef COMMON_VERSION_H
+#define COMMON_VERSION_H
 
 #include <string>
 #include <sstream>
@@ -13,40 +13,40 @@
 namespace AliceO2 {
 namespace Common {
 /// The current major version.
-#define HELLO_VERSION_MAJOR @VERSION_MAJOR@
+#define COMMON_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
 
 /// The current minor version.
-#define HELLO_VERSION_MINOR @VERSION_MINOR@
+#define COMMON_VERSION_MINOR @PROJECT_VERSION_MINOR@
 
 /// The current patch level.
-#define HELLO_VERSION_PATCH @VERSION_PATCH@
+#define COMMON_VERSION_PATCH @PROJECT_VERSION_PATCH@
 
 /// The current VCS revision.
 #define HELLO_VCS_REVISION "@VCS_REVISION@"
 
 /// True if the current version is newer than the given one.
-#define HELLO_VERSION_GT(MAJOR, MINOR, PATCH) \
-  ((HELLO_VERSION_MAJOR > MAJOR) ||           \
-   (HELLO_VERSION_MAJOR ==                    \
-    MAJOR&&(HELLO_VERSION_MINOR > MINOR || (HELLO_VERSION_MINOR == MINOR&& HELLO_VERSION_PATCH > PATCH))))
+#define COMMON_VERSION_GT(MAJOR, MINOR, PATCH) \
+  ((COMMON_VERSION_MAJOR > MAJOR) ||           \
+   (COMMON_VERSION_MAJOR ==                    \
+    MAJOR&&(COMMON_VERSION_MINOR > MINOR || (COMMON_VERSION_MINOR == MINOR&& COMMON_VERSION_PATCH > PATCH))))
 
 /// True if the current version is equal or newer to the given.
-#define HELLO_VERSION_GE(MAJOR, MINOR, PATCH) \
-  ((HELLO_VERSION_MAJOR > MAJOR) ||           \
-   (HELLO_VERSION_MAJOR ==                    \
-    MAJOR&&(HELLO_VERSION_MINOR > MINOR || (HELLO_VERSION_MINOR == MINOR&& HELLO_VERSION_PATCH >= PATCH))))
+#define COMMON_VERSION_GE(MAJOR, MINOR, PATCH) \
+  ((COMMON_VERSION_MAJOR > MAJOR) ||           \
+   (COMMON_VERSION_MAJOR ==                    \
+    MAJOR&&(COMMON_VERSION_MINOR > MINOR || (COMMON_VERSION_MINOR == MINOR&& COMMON_VERSION_PATCH >= PATCH))))
 
 /// True if the current version is older than the given one.
-#define HELLO_VERSION_LT(MAJOR, MINOR, PATCH) \
-  ((HELLO_VERSION_MAJOR < MAJOR) ||           \
-   (HELLO_VERSION_MAJOR ==                    \
-    MAJOR&&(HELLO_VERSION_MINOR < MINOR || (HELLO_VERSION_MINOR == MINOR&& HELLO_VERSION_PATCH < PATCH))))
+#define COMMON_VERSION_LT(MAJOR, MINOR, PATCH) \
+  ((COMMON_VERSION_MAJOR < MAJOR) ||           \
+   (COMMON_VERSION_MAJOR ==                    \
+    MAJOR&&(COMMON_VERSION_MINOR < MINOR || (COMMON_VERSION_MINOR == MINOR&& COMMON_VERSION_PATCH < PATCH))))
 
 /// True if the current version is older or equal to the given.
-#define HELLO_VERSION_LE(MAJOR, MINOR, PATCH) \
-  ((HELLO_VERSION_MAJOR < MAJOR) ||           \
-   (HELLO_VERSION_MAJOR ==                    \
-    MAJOR&&(HELLO_VERSION_MINOR < MINOR || (HELLO_VERSION_MINOR == MINOR&& HELLO_VERSION_PATCH <= PATCH))))
+#define COMMON_VERSION_LE(MAJOR, MINOR, PATCH) \
+  ((COMMON_VERSION_MAJOR < MAJOR) ||           \
+   (COMMON_VERSION_MAJOR ==                    \
+    MAJOR&&(COMMON_VERSION_MINOR < MINOR || (COMMON_VERSION_MINOR == MINOR&& COMMON_VERSION_PATCH <= PATCH))))
 
 /// Information about the current Common version.
 class Version {
@@ -54,26 +54,26 @@ public:
   /// @return the current major version of Common.
   static int getMajor()
   {
-    return HELLO_VERSION_MAJOR;
+    return COMMON_VERSION_MAJOR;
   }
 
   /// @return the current minor version of Common.
   static int getMinor()
   {
-    return HELLO_VERSION_MINOR;
+    return COMMON_VERSION_MINOR;
   }
 
   /// @return the current patch level of Common.
   static int getPatch()
   {
-    return HELLO_VERSION_PATCH;
+    return COMMON_VERSION_PATCH;
   }
 
   /// @return the current Common version (MM.mm.pp).
   static std::string getString()
   {
     std::ostringstream version;
-    version << HELLO_VERSION_MAJOR << '.' << HELLO_VERSION_MINOR << '.' << HELLO_VERSION_PATCH;
+    version << COMMON_VERSION_MAJOR << '.' << COMMON_VERSION_MINOR << '.' << COMMON_VERSION_PATCH;
     return version.str();
   }
 
@@ -94,4 +94,4 @@ public:
 }
 }
 
-#endif // COMMON_HELLO_VERSION_H
+#endif // COMMON_VERSION_H
