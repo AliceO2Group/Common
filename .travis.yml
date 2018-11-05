@@ -14,13 +14,11 @@ matrix:
             - gcc-8
             - g++-8
             - cmake
-before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd ..; wget https://dl.bintray.com/boostorg/release/1.64.0/source/boost_1_64_0.tar.gz; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar xf boost_1_64_0.tar.gz; cd $TRAVIS_BUILD_DIR; fi
+            - libboost-filesystem1.55-dev
+            - libboost-test1.55-dev
+            - libboost-program-options1.55-dev
 install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 90; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd ../boost_1_64_0; ./bootstrap.sh --with-libraries=test,program_options,system,filesystem; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo ./b2 -j 4 install > /dev/null 2>&1; cd $TRAVIS_BUILD_DIR; fi
 before_script: 
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sed -i -e 's/test\/TestSystem.cxx//g' CMakeLists.txt; fi
   - mkdir build; cd build

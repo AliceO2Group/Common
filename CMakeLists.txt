@@ -39,7 +39,7 @@ set(CMAKE_INSTALL_LIBDIR lib)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
-find_package(Boost 1.56
+find_package(Boost 1.55
   COMPONENTS unit_test_framework
              program_options
              filesystem
