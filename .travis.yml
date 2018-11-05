@@ -14,6 +14,7 @@ matrix:
             - gcc-8
             - g++-8
             - cmake
+            - libboost-system1.55-dev
             - libboost-filesystem1.55-dev
             - libboost-test1.55-dev
             - libboost-program-options1.55-dev
