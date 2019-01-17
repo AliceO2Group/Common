@@ -37,8 +37,11 @@ typedef struct {
   uint32_t      dataSize;     ///< data size following this structure (until next header, if this is not a toplevel block header)
   DataBlockId   id;           ///< id of the block (monotonic increasing sequence)
   uint32_t      linkId;       ///< id of link
+  uint16_t      equipmentId;  ///< id of equipment generating the data
 } DataBlockHeaderBase;
 
+const uint32_t undefinedLinkId=0;        ///< default value, when linkId undefined
+const uint16_t undefinedEquipmentId=0;   ///< default value, when equipmentId undefined
 
 /// Add extra types below, e.g.
 ///
