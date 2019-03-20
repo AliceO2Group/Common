@@ -36,7 +36,8 @@ before_script:
   - if [[ $TOOL == "test" ]]; then sed -i -e 's/test\/TestSystem.cxx//g' CMakeLists.txt; fi
   - if [[ $TOOL == "test" ]]; then mkdir build; cd build; fi
 script:
-  - if [[ $TOOL == "test" ]]; then cmake .. -DCMAKE_C_COMPILER=/usr/bin/gcc-8 -DCMAKE_CXX_COMPILER=/usr/bin/g++-8; fi
+  - if [[ $TOOL == "test" ]] && [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cmake ..; fi
+  - if [[ $TOOL == "test" ]] && [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake .. -DCMAKE_C_COMPILER=/usr/bin/gcc-8 -DCMAKE_CXX_COMPILER=/usr/bin/g++-8; fi
   - if [[ $TOOL == "test" ]]; then make -j; fi
   - if [[ $TOOL == "test" ]]; then make test; fi
   - if [[ $TOOL == "clang-format" ]] && [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
