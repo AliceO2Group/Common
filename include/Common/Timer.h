@@ -42,6 +42,9 @@ class Timer {
     
     /// \return Returns time elapsed since reset, in microseconds.
     double getTime();    
+
+    /// \return Returns the time until next timeout, in microseconds. This may be a negative value if timeout occured already.
+    double getRemainingTime();
     
   private:
     std::chrono::time_point<std::chrono::high_resolution_clock> t0; // time of reset
