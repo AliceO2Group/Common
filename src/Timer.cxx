@@ -38,5 +38,10 @@ double Timer::getTime() {
     return tdiff.count();
 } 
 
+double Timer::getRemainingTime() {
+    std::chrono::duration<double> tdiff= std::chrono::high_resolution_clock::now() - t0;
+    return tmax-tdiff.count();
+} 
+
 } // namespace Common
 } // namespace AliceO2
