@@ -38,6 +38,7 @@ typedef struct {
   DataBlockId   id;           ///< id of the block (monotonic increasing sequence)
   uint32_t      linkId;       ///< id of link
   uint16_t      equipmentId;  ///< id of equipment generating the data
+  uint32_t      bufferSize;   ///< size of usable buffer, in case one need to edit/append something to the block. typically, >=dataSize. if zero, data is read-only.
 } DataBlockHeaderBase;
 
 const uint32_t undefinedLinkId=0;        ///< default value, when linkId undefined
