@@ -15,20 +15,20 @@
 class DataBlockContainer {
 
   public:
-  DataBlockContainer(DataBlock *v_data=NULL, uint64_t v_dataBufferSize=0);
-  virtual ~DataBlockContainer();
-  DataBlock *getData();
-  uint64_t getDataBufferSize();
+   DataBlockContainer(DataBlock* v_data = NULL, uint64_t v_dataBufferSize = 0);
+   virtual ~DataBlockContainer();
+   DataBlock* getData();
+   uint64_t getDataBufferSize();
 
-  using ReleaseCallback = std::function<void(void)>;
-  // NB: may use std::bind to add extra arguments
-  
-  // this constructor allows to specify a callback which is invoked when container is destroyed
-  DataBlockContainer(ReleaseCallback callback, DataBlock *v_data=NULL, uint64_t v_dataBufferSize=0);
+   using ReleaseCallback = std::function<void(void)>;
+   // NB: may use std::bind to add extra arguments
+
+   // this constructor allows to specify a callback which is invoked when container is destroyed
+   DataBlockContainer(ReleaseCallback callback, DataBlock* v_data = NULL, uint64_t v_dataBufferSize = 0);
 
   protected:
   DataBlock *data;
-  uint64_t dataBufferSize=0; // Usable memory size pointed by data. Unspecified if zero.
+  uint64_t dataBufferSize = 0; // Usable memory size pointed by data. Unspecified if zero.
   ReleaseCallback releaseCallback;
 };
 

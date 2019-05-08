@@ -3,11 +3,13 @@
 
 // base DataBlockContainer class
 
-DataBlockContainer::DataBlockContainer(DataBlock *v_data, uint64_t v_dataBufferSize) : data(v_data), dataBufferSize(v_dataBufferSize), releaseCallback(nullptr) {
+DataBlockContainer::DataBlockContainer(DataBlock* v_data, uint64_t v_dataBufferSize) : data(v_data), dataBufferSize(v_dataBufferSize), releaseCallback(nullptr)
+{
 }
 
-DataBlockContainer::DataBlockContainer(ReleaseCallback v_callback, DataBlock *v_data, uint64_t v_dataBufferSize)
-: data(v_data), dataBufferSize(v_dataBufferSize), releaseCallback(v_callback) {
+DataBlockContainer::DataBlockContainer(ReleaseCallback v_callback, DataBlock* v_data, uint64_t v_dataBufferSize)
+  : data(v_data), dataBufferSize(v_dataBufferSize), releaseCallback(v_callback)
+{
 }
 
 DataBlockContainer::~DataBlockContainer() {
@@ -20,7 +22,8 @@ DataBlock * DataBlockContainer::getData() {
   return data;
 }
 
-uint64_t DataBlockContainer::getDataBufferSize() {
+uint64_t DataBlockContainer::getDataBufferSize()
+{
   return dataBufferSize;
 }
 
