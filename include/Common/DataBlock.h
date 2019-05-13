@@ -40,8 +40,8 @@ typedef struct {
   uint16_t      equipmentId;  ///< id of equipment generating the data
 } DataBlockHeaderBase;
 
-const uint32_t undefinedLinkId=0xFF;        ///< default value, when linkId undefined
-const uint16_t undefinedEquipmentId=0xFF;   ///< default value, when equipmentId undefined
+const uint32_t undefinedLinkId = 0xFF;        ///< default value, when linkId undefined
+const uint16_t undefinedEquipmentId = 0xFF;   ///< default value, when equipmentId undefined
 
 /// Add extra types below, e.g.
 ///
