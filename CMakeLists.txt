@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.5.2 FATAL_ERROR)
+set(BUILD_SHARED_LIBS ON)
 
 # Set cmake policy by version: https://cmake.org/cmake/help/latest/manual/cmake-policies.7.html
 if(${CMAKE_VERSION} VERSION_LESS 3.12)
