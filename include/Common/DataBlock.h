@@ -32,16 +32,20 @@ typedef uint64_t DataBlockId;
 /// headerPtr + headerSize = payloadPtr
 /// headerPtr + headerSize + dataSize = nextHeaderPtr (if not toplevel block header)
 typedef struct {
-  uint32_t      blockType;     ///< ID to identify structure type
-  uint32_t      headerSize;     ///< header size in bytes
+  uint32_t      blockType;    ///< ID to identify structure type
+  uint32_t      headerSize;   ///< header size in bytes
   uint32_t      dataSize;     ///< data size following this structure (until next header, if this is not a toplevel block header)
-  DataBlockId   id;           ///< id of the block (monotonic increasing sequence)
+  DataBlockId   blockId;      ///< id of the block (strictly monotonic increasing sequence)
   uint32_t      linkId;       ///< id of link
   uint16_t      equipmentId;  ///< id of equipment generating the data
+  uint64_t      timeframeId;  ///< id of timeframe
+  DataBlockId   id;           ///< obsolete - kept for compatibility only. Use blockId or timeframeId instead.
 } DataBlockHeaderBase;
 
+const uint64_t undefinedBlockId = 0;        ///< default value, when blockId undefined
 const uint32_t undefinedLinkId = 0xFF;      ///< default value, when linkId undefined
 const uint16_t undefinedEquipmentId = 0xFF; ///< default value, when equipmentId undefined
+const uint64_t undefinedTimeframeId = 0;    ///< default value, when timeframeId undefined
 
 /// Add extra types below, e.g.
 ///
