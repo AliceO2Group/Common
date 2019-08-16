@@ -128,11 +128,11 @@ class ConfigFile
     /// Print configuration tree
     void print();
 
-  /// Get configuration tree
-  boost::property_tree::ptree& get()
-  {
-    return dPtr->pt;
-  }
+    /// Get configuration tree
+    boost::property_tree::ptree& get()
+    {
+      return dPtr->pt;
+    }
 
   private:
     ConfigFilePrivate *dPtr;
