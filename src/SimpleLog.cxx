@@ -27,7 +27,7 @@ class SimpleLog::Impl {
   int formatOptions;
   int fdStdout;
   int fdStderr;
-  
+
   friend class SimpleLog;
 };
 
@@ -36,8 +36,8 @@ SimpleLog::Impl::Impl() {
   formatOptions =   SimpleLog::FormatOption::ShowTimeStamp
                   | SimpleLog::FormatOption::ShowSeveritySymbol
                   | SimpleLog::FormatOption::ShowMessage;
-  fdStdout=fileno(stdout);
-  fdStderr=fileno(stderr);
+  fdStdout = fileno(stdout);
+  fdStderr = fileno(stderr);
 }
 
 SimpleLog::Impl::~Impl() {
@@ -51,7 +51,7 @@ SimpleLog::Impl::~Impl() {
 int SimpleLog::Impl::logV(SimpleLog::Impl::Severity s, const char *message, va_list ap)
 {
   char buffer[1024] = "";
-  size_t len = sizeof(buffer)-2;
+  size_t len = sizeof(buffer) - 2;
   size_t ix = 0;
 
   if (formatOptions & SimpleLog::FormatOption::ShowTimeStamp) {  
@@ -100,22 +100,22 @@ int SimpleLog::Impl::logV(SimpleLog::Impl::Severity s, const char *message, va_l
    ix+=vsnprintf(&buffer[ix], len-ix, message, ap);
    if (ix>len) { ix=len; } 
   }
-  
-  buffer[ix]='\n';
+
+  buffer[ix] = '\n';
   ix++;
   buffer[ix]=0;
 
-  int fd; 
-  if (fp!=NULL) {
-    fd=fileno(fp);
+  int fd;
+  if (fp != NULL) {
+    fd = fileno(fp);
   } else {
     if (s==Severity::Error) {
-      fd=fdStderr;
+      fd = fdStderr;
     } else {
-      fd=fdStdout;
+      fd = fdStdout;
     }
-  }  
-  write(fd,buffer,ix);
+  }
+  write(fd, buffer, ix);
 
   return 0;
 }
@@ -190,9 +190,10 @@ void SimpleLog::setOutputFormat(int opts) {
   pImpl->formatOptions=opts;
 }
 
-void SimpleLog::setFileDescriptors(int fdStdout, int fdStderr) {
-  pImpl->fdStdout=fdStdout;
-  pImpl->fdStderr=fdStderr;
+void SimpleLog::setFileDescriptors(int fdStdout, int fdStderr)
+{
+  pImpl->fdStdout = fdStdout;
+  pImpl->fdStderr = fdStderr;
 }
 
 /// \todo: thread to flush output every 1 second
