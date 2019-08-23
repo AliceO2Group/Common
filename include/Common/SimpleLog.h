@@ -26,6 +26,9 @@ class SimpleLog {
   // \param logFilePath Path to log file. If NULL, using stdout/stderr.
   int setLogFile(const char* logFilePath=NULL);
 
+  // Change file descriptors used for stdout/stderr with provided ones
+  // They must be valid for the lifetime of this object (or until overwritten), and are not closed.
+  void setFileDescriptors(int fdStdout, int fdStderr);
 
   enum FormatOption : int {
     ShowTimeStamp = 0x1,
