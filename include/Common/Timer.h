@@ -40,10 +40,10 @@ class Timer {
     /// \return Returns 1 if timeout, 0 otherwise.
     int isTimeout();
     
-    /// \return Returns time elapsed since reset, in microseconds.
+    /// \return Returns time elapsed since reset, in seconds.
     double getTime();    
 
-    /// \return Returns the time until next timeout, in microseconds. This may be a negative value if timeout occured already.
+    /// \return Returns the time until next timeout, in seconds. This may be a negative value if timeout occured already.
     double getRemainingTime();
     
   private:
