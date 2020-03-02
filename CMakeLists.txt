@@ -108,6 +108,9 @@ set_source_files_properties(test/testDataFormat.c PROPERTIES LANGUAGE CXX)
 add_test(NAME testDataFormat COMMAND testDataFormat)
 set_tests_properties(testDataFormat PROPERTIES TIMEOUT 60)
 
+add_executable(testSimpleLog test/testSimpleLog.cxx)
+target_link_libraries(testSimpleLog Common)
+
 set(TEST_SRCS
   test/TestBasicThread.cxx
   test/testFifo.cxx
