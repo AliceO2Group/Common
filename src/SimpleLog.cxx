@@ -9,6 +9,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <algorithm>
+#include <string>
 
 class SimpleLog::Impl {
   public:
