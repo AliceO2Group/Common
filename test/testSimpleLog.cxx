@@ -4,10 +4,11 @@
 
 #include <Common/SimpleLog.h>
 
-int main() {
+int main()
+{
 
   SimpleLog theLog;
-  theLog.setLogFile("/tmp/test.log",100,4,0);
+  theLog.setLogFile("/tmp/test.log", 100, 4, 0);
   theLog.info("test message");
 
   return 0;
