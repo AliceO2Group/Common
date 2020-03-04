@@ -107,6 +107,12 @@ Daemon::Daemon(int argc, char * argv[], DaemonConfigParameters *dConfigParams) {
               params.redirectOutput=std::stoi(value);;
             } else if (key=="logFile") {
               params.logFile=value;
+            } else if (key=="logRotateMaxBytes") {
+              params.logRotateMaxBytes=std::stoi(value);
+            } else if (key=="logRotateMaxFiles") {
+              params.logRotateMaxFiles=std::stoi(value);
+            } else if (key=="logRotateNow") {
+              params.logRotateNow=std::stoi(value);
             } else {
               log.error("Unkown option key %s in option %s",key.c_str(),optarg);
               throw __LINE__;
@@ -129,11 +135,14 @@ Daemon::Daemon(int argc, char * argv[], DaemonConfigParameters *dConfigParams) {
     config.getOptionalValue<std::string>(cfgEntryPoint + ".userName", params.userName);
     config.getOptionalValue<int>(cfgEntryPoint + ".redirectOutput", params.redirectOutput);
     config.getOptionalValue<std::string>(cfgEntryPoint + ".logFile", params.logFile);    
-    
+    config.getOptionalValue<int>(cfgEntryPoint + ".logRotateMaxBytes", params.logRotateMaxBytes);
+    config.getOptionalValue<int>(cfgEntryPoint + ".logRotateMaxFiles", params.logRotateMaxFiles);
+    config.getOptionalValue<int>(cfgEntryPoint + ".logRotateNow", params.logRotateNow);
     
     // open log file, if configured
     if (params.logFile.length()>0) {
-      log.setLogFile(params.logFile.c_str());
+      log.setLogFile(params.logFile.c_str(),
+        params.logRotateMaxBytes, params.logRotateMaxFiles, params.logRotateNow);
     }
 
     // become a daemon, if configured to do so

@@ -18,6 +18,9 @@ public:
   std::string userName;          // user name under which should run the process. Not changed if empty.
   int redirectOutput=0;          // flag set to redirect stdout/stderr to /dev/null
   std::string logFile;           // log file (leave empty to keep stdout/stderr)
+  int logRotateMaxBytes=0;       // log file max size (0: unlimited)
+  int logRotateMaxFiles=0;       // log file max number of files kept (0:unlimited)
+  int logRotateNow=0;            // log file rotate now (0: append current, 1: create new)
 };
 
 
