@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(exceptions_test)
     cout << e.what() << endl;
     output_test_stream output;
     output << e.what();
-    BOOST_TEST( !output.is_empty( false ) );
-    BOOST_TEST( output.is_equal( "Object not found: (object_name not specified)" ) );
+    BOOST_TEST(!output.is_empty(false));
+    BOOST_TEST(output.is_equal("Object not found: (object_name not specified)"));
   }
 }
