@@ -7,7 +7,7 @@
 #include <boost/test/unit_test.hpp>
 #include <assert.h>
 #include <boost/test/output_test_stream.hpp>
-
+#include <iostream>
 #include <time.h>
 
 using namespace std;
