@@ -138,6 +138,7 @@ set(TEST_SRCS
   test/TestSystem.cxx
   test/testMemPool.cxx
   test/testTimer.cxx
+  test/testExceptions.cxx
 )
 
 foreach (test ${TEST_SRCS})
