@@ -69,3 +69,5 @@ Class to implement controllable looping threads.
 
 Class to implement a high resolution timer function.
 (counting time or timeout)
+
+PLEASE DO NOT MERGE THIS PULL REQUEST
