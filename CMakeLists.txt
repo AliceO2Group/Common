@@ -9,7 +9,7 @@ else()
 endif()
 
 project(Common
-  VERSION 0.0.0
+  VERSION 1.5.0
   DESCRIPTION "O2 Common library"
   LANGUAGES C CXX
 )
