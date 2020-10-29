@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <boost/exception/all.hpp>
 
-namespace AliceO2 
+namespace AliceO2
 {
 namespace Common
 {
@@ -20,8 +20,7 @@ const char* Exception::what() const noexcept
     } else {
       return "AliceO2::Common::Exception";
     }
-  }
-  catch (const std::exception& e) {
+  } catch (const std::exception& e) {
     return "AliceO2::Common::Exception";
   }
 }

@@ -35,4 +35,3 @@ BOOST_AUTO_TEST_CASE(TestFloatingPoint)
   sn.setNumber("-123");
   BOOST_CHECK_EQUAL(sn.getNumber(), -123);
 }
-

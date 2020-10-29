@@ -23,7 +23,7 @@ namespace System
 namespace b = boost;
 namespace bfs = boost::filesystem;
 
-void setSigIntHandler(void(*function)(int))
+void setSigIntHandler(void (*function)(int))
 {
   struct sigaction sa;
   memset(&sa, 0, sizeof(sa));
@@ -62,15 +62,15 @@ void touchFile(const std::string& path)
 
 std::string executeCommand(const std::string& command)
 {
-  std::unique_ptr<FILE, void(*)(FILE*)> input(popen(command.c_str(), "r"), [](FILE* f){pclose(f);});
+  std::unique_ptr<FILE, void (*)(FILE*)> input(popen(command.c_str(), "r"), [](FILE* f) { pclose(f); });
 
-  if(!input.get()){
+  if (!input.get()) {
     BOOST_THROW_EXCEPTION(std::runtime_error("Call to popen failed"));
   }
 
   std::vector<char> buffer(128);
   std::ostringstream oss;
-  while(fgets(buffer.data(), buffer.size(), input.get()) != NULL){
+  while (fgets(buffer.data(), buffer.size(), input.get()) != NULL) {
     oss << buffer.data();
   }
 
@@ -79,7 +79,7 @@ std::string executeCommand(const std::string& command)
 
 std::string getFileSystemType(const std::string& path)
 {
-  std::string type {""};
+  std::string type{ "" };
   std::string result = executeCommand(b::str(b::format("df %s") % path));
 
   // We need the second line of the output (first line is a header)
@@ -98,10 +98,10 @@ std::string getFileSystemType(const std::string& path)
 }
 
 std::pair<bool, std::string> isFileSystemTypeAnyOf(const std::string& path,
-    const std::set<std::string>& types)
+                                                   const std::set<std::string>& types)
 {
   auto type = getFileSystemType(path);
-  return {types.count(type), type};
+  return { types.count(type), type };
 }
 
 /// Throws if the file system type of the given file/directory is not one of the given valid types
@@ -123,9 +123,9 @@ void assertFileSystemType(const std::string& path, const std::set<std::string>& 
     oss << ")";
 
     BOOST_THROW_EXCEPTION(Exception()
-        << ErrorInfo::Message(oss.str())
-        << ErrorInfo::FileName(path)
-        << ErrorInfo::FilesystemType(type));
+                          << ErrorInfo::Message(oss.str())
+                          << ErrorInfo::FileName(path)
+                          << ErrorInfo::FilesystemType(type));
   }
 }
 

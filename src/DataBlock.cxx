@@ -5,10 +5,12 @@
 
 #include "Common/DataBlock.h"
 
-namespace AliceO2 {
-namespace ProjectTemplate {
-namespace DataFormat {
-
+namespace AliceO2
+{
+namespace ProjectTemplate
+{
+namespace DataFormat
+{
 
 } // namespace DataFormat
 } // namespace ProjectTemplate

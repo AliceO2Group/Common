@@ -23,49 +23,46 @@ namespace Common
 /// the function should stop its work.
 class BasicThread
 {
-  public:
+ public:
+  /// Start thread
+  /// \param stopFlag Pointer to flag indicating the function should stop
+  void start(std::function<void(std::atomic<bool>* stopFlag)> function)
+  {
+    join();
+    mStopFlag = false;
+    mThread = std::thread(function, &mStopFlag);
+  }
 
-    /// Start thread
-    /// \param stopFlag Pointer to flag indicating the function should stop
-    void start(std::function<void(std::atomic<bool>* stopFlag)> function)
-    {
+  void stop()
+  {
+    mStopFlag = true;
+  }
+
+  void join()
+  {
+    stop();
+    if (mThread.joinable()) {
+      mThread.join();
+    }
+  }
+
+  ~BasicThread()
+  {
+    try {
       join();
-      mStopFlag = false;
-      mThread = std::thread(function, &mStopFlag);
+    } catch (const std::system_error& e) {
+      std::cout << "Failed to join thread: " << e.what() << '\n';
+    } catch (const std::exception& e) {
+      std::cout << "Unexpected exception while joining thread: " << e.what() << '\n';
     }
+  }
 
-    void stop()
-    {
-      mStopFlag = true;
-    }
+ private:
+  /// Thread object
+  std::thread mThread;
 
-    void join()
-    {
-      stop();
-      if (mThread.joinable()) {
-        mThread.join();
-      }
-    }
-
-    ~BasicThread()
-    {
-      try {
-        join();
-      }
-      catch (const std::system_error& e) {
-        std::cout << "Failed to join thread: " << e.what() << '\n';
-      }
-      catch (const std::exception& e) {
-        std::cout << "Unexpected exception while joining thread: " << e.what() << '\n';
-      }
-    }
-
-  private:
-    /// Thread object
-    std::thread mThread;
-
-    /// Flag to stop the thread
-    std::atomic<bool> mStopFlag;
+  /// Flag to stop the thread
+  std::atomic<bool> mStopFlag;
 };
 
 } // namespace Common

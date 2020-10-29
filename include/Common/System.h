@@ -18,7 +18,7 @@ namespace System
 {
 
 /// Sets the given function as the SIGINT handler
-void setSigIntHandler(void(*function)(int));
+void setSigIntHandler(void (*function)(int));
 
 /// Checks if there's a SIGINT handler installed (not sure if it actually works correctly)
 bool isSigIntHandlerSet();

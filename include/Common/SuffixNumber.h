@@ -12,11 +12,11 @@
 #include <boost/lexical_cast.hpp>
 #include "Common/Exceptions.h"
 
-namespace AliceO2 
+namespace AliceO2
 {
-namespace Common 
+namespace Common
 {
-namespace _SuffixNumberTable 
+namespace _SuffixNumberTable
 {
 const std::vector<std::pair<std::string, const size_t>>& get();
 } // namespace _SuffixNumberTable
@@ -28,81 +28,81 @@ const std::vector<std::pair<std::string, const size_t>>& get();
 template <typename Number>
 class SuffixNumber
 {
-  public:
-    using NumberType = Number;
+ public:
+  using NumberType = Number;
 
-    SuffixNumber() : mNumber(0)
-    {
+  SuffixNumber() : mNumber(0)
+  {
+  }
+
+  SuffixNumber(Number number) : mNumber(number)
+  {
+  }
+
+  SuffixNumber(std::string input) : mNumber(parse(input))
+  {
+  }
+
+  Number getNumber() const
+  {
+    return mNumber;
+  }
+
+  void setNumber(std::string input)
+  {
+    mNumber = parse(input);
+  }
+
+  void setNumber(Number number)
+  {
+    mNumber = number;
+  }
+
+ private:
+  Number parse(std::string input) const
+  {
+    // Find the non-numeric suffix
+    auto pos = input.find_first_not_of("-.0123456789");
+
+    // Convert numeric part
+    auto numberString = input.substr(0, pos);
+    Number number;
+    if (!boost::conversion::try_lexical_convert<Number>(numberString, number)) {
+      BOOST_THROW_EXCEPTION(Exception() << ErrorInfo::Message("Could not convert number")
+                                        << ErrorInfo::Input(numberString));
     }
 
-    SuffixNumber(Number number) : mNumber(number)
-    {
+    if (pos == std::string::npos) {
+      // There's no unit
+      return number;
     }
 
-    SuffixNumber(std::string input) : mNumber(parse(input))
-    {
-    }
-
-    Number getNumber() const
-    {
-      return mNumber;
-    }
-
-    void setNumber(std::string input)
-    {
-      mNumber = parse(input);
-    }
-
-    void setNumber(Number number)
-    {
-      mNumber = number;
-    }
-
-  private:
-    Number parse(std::string input) const
-    {
-      // Find the non-numeric suffix
-      auto pos = input.find_first_not_of("-.0123456789");
-
-      // Convert numeric part
-      auto numberString = input.substr(0, pos);
-      Number number;
-      if (!boost::conversion::try_lexical_convert<Number>(numberString, number)) {
-        BOOST_THROW_EXCEPTION(Exception() << ErrorInfo::Message("Could not convert number")
-            << ErrorInfo::Input(numberString));
-      }
-
-      if (pos == std::string::npos) {
-        // There's no unit
-        return number;
-      }
-
-      // Find unit and multiply number with it
-      auto unitString = input.substr(pos);
-      for (const auto& unit : _SuffixNumberTable::get()) {
-        if (unitString == unit.first) {
-          // We found the right unit, multiply it with the number
-          Number a = number;
-          Number b = unit.second;
-          Number multiplied = a * b;
-          if (std::is_integral<Number>::value) {
-            // Check for overflow for integers
-            if ((a != 0) && ((multiplied / a) != b)) {
-              BOOST_THROW_EXCEPTION(Exception() << ErrorInfo::Message("Number too large for representation")
-                << ErrorInfo::Input(input));
-            }
+    // Find unit and multiply number with it
+    auto unitString = input.substr(pos);
+    for (const auto& unit : _SuffixNumberTable::get()) {
+      if (unitString == unit.first) {
+        // We found the right unit, multiply it with the number
+        Number a = number;
+        Number b = unit.second;
+        Number multiplied = a * b;
+        if (std::is_integral<Number>::value) {
+          // Check for overflow for integers
+          if ((a != 0) && ((multiplied / a) != b)) {
+            BOOST_THROW_EXCEPTION(Exception() << ErrorInfo::Message("Number too large for representation")
+                                              << ErrorInfo::Input(input));
           }
-          return multiplied;
         }
+        return multiplied;
       }
-      BOOST_THROW_EXCEPTION(Exception() << ErrorInfo::Message("Unrecognized unit") << ErrorInfo::Suffix(unitString));
     }
+    BOOST_THROW_EXCEPTION(Exception() << ErrorInfo::Message("Unrecognized unit") << ErrorInfo::Suffix(unitString));
+  }
 
-    Number mNumber;
+  Number mNumber;
 };
 
 template <typename T>
-std::istream& operator>>(std::istream &stream, SuffixNumber<T>& suffixNumber)
+std::istream& operator>>(std::istream& stream, SuffixNumber<T>& suffixNumber)
 {
   std::string string;
   stream >> string;

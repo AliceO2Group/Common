@@ -13,18 +13,20 @@ BOOST_AUTO_TEST_CASE(timer_test)
 {
   AliceO2::Common::Timer t;
   time_t t0;
-  t0=time(NULL);
-  
-  while (time(NULL)==t0) {}
+  t0 = time(NULL);
+
+  while (time(NULL) == t0) {
+  }
   t.reset();
-  while (time(NULL)<=t0+1) {}
-  
-  double elapsed=t.getTime();
-  
-  printf("Timer elapsed=%.4lf\n",elapsed);
-  int success=0;
-  if (std::fabs(elapsed-1.0)<0.01) {
-    success=1;
+  while (time(NULL) <= t0 + 1) {
+  }
+
+  double elapsed = t.getTime();
+
+  printf("Timer elapsed=%.4lf\n", elapsed);
+  int success = 0;
+  if (std::fabs(elapsed - 1.0) < 0.01) {
+    success = 1;
   }
 
   BOOST_CHECK_EQUAL(success, 1);
