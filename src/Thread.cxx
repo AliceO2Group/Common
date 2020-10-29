@@ -59,7 +59,9 @@ void Thread::threadMain(Thread *e) {
     if (r==Thread::CallbackResult::Ok) {
     } else if (r==Thread::CallbackResult::Idle) {
       if (e->shutdown) break; // exit immediately on shutdown
-      usleep(e->loopSleepTime);
+      if (e->loopSleepTime>0) {
+        usleep(e->loopSleepTime);
+      }
     } else if (r==Thread::CallbackResult::Error) {
       // account this error... maybe do something if repetitive
       if (e->shutdown) break; // exit immediately on shutdown
