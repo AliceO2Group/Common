@@ -90,8 +90,6 @@ add_library(Common
             src/Thread.cxx
             src/Timer.cxx
             src/Configuration.cxx
-            src/DataBlock.cxx
-            src/DataBlockContainer.cxx
             src/MemPool.cxx)
 
 # Produce the final Version.h using template Version.h.in and substituting
@@ -120,12 +118,6 @@ add_subdirectory(doc)
 ####################################
 enable_testing()
 
-add_executable(testDataFormat test/testDataFormat.c)
-target_link_libraries(testDataFormat Common)
-set_source_files_properties(test/testDataFormat.c PROPERTIES LANGUAGE CXX)
-add_test(NAME testDataFormat COMMAND testDataFormat)
-set_tests_properties(testDataFormat PROPERTIES TIMEOUT 60)
-
 add_executable(testSimpleLog test/testSimpleLog.cxx)
 target_link_libraries(testSimpleLog Common)
 
@@ -136,7 +128,6 @@ set(TEST_SRCS
   test/TestSuffixNumber.cxx
   test/TestSuffixOption.cxx
   test/TestSystem.cxx
-  test/testMemPool.cxx
   test/testTimer.cxx
 )
 
