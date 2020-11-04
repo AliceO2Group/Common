@@ -22,21 +22,21 @@ namespace Common
 {
 namespace
 {
-  const std::string HELP_SWITCH = "help";
-  const std::string VERBOSE_SWITCH = "verbose";
-  const std::string VERSION_SWITCH = "version";
+const std::string HELP_SWITCH = "help";
+const std::string VERBOSE_SWITCH = "verbose";
+const std::string VERSION_SWITCH = "version";
 
-  po::options_description createOptionsDescription()
-  {
-    // Get size of the terminal, the amount of columns is used for formatting the options
-    struct winsize w;
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+po::options_description createOptionsDescription()
+{
+  // Get size of the terminal, the amount of columns is used for formatting the options
+  struct winsize w;
+  ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 
-    po::options_description optionsDescription("Allowed options", w.ws_col, w.ws_col/2);
-    optionsDescription.add_options()("help", "Produce help message");
-    return optionsDescription;
-  }
+  po::options_description optionsDescription("Allowed options", w.ws_col, w.ws_col / 2);
+  optionsDescription.add_options()("help", "Produce help message");
+  return optionsDescription;
 }
+} // namespace
 
 std::atomic<bool> Program::sFlagSigInt(false);
 
@@ -46,7 +46,7 @@ void Program::sigIntHandler(int)
 }
 
 Program::Program()
-    : mVerbose(false)
+  : mVerbose(false)
 {
 }
 
@@ -54,16 +54,16 @@ Program::~Program()
 {
 }
 
-void Program::printHelp (const po::options_description& optionsDescription)
+void Program::printHelp(const po::options_description& optionsDescription)
 {
   const auto& description = getDescription();
   cout << "#### " << description.name << "\n"
-  << description.description << '\n'
-  << '\n'
-  << optionsDescription
-  << '\n'
-  << "Example:\n"
-  << "  " << description.usage << '\n';
+       << description.description << '\n'
+       << '\n'
+       << optionsDescription
+       << '\n'
+       << "Example:\n"
+       << "  " << description.usage << '\n';
 }
 
 int Program::execute(int argc, char** argv)
@@ -73,9 +73,7 @@ int Program::execute(int argc, char** argv)
   auto optionsDescription = createOptionsDescription();
 
   // We add a verbose switch
-  optionsDescription.add_options()
-      (VERBOSE_SWITCH.c_str(), "Verbose output")
-      (VERSION_SWITCH.c_str(), "Display RORC library version");
+  optionsDescription.add_options()(VERBOSE_SWITCH.c_str(), "Verbose output")(VERSION_SWITCH.c_str(), "Display RORC library version");
 
   // Subclass will add own options
   addOptions(optionsDescription);
@@ -90,15 +88,15 @@ int Program::execute(int argc, char** argv)
         return 0;
       }
       po::notify(variablesMap);
-    }
-    catch (const po::unknown_option& e) {
+    } catch (const po::unknown_option& e) {
       BOOST_THROW_EXCEPTION(ProgramOptionException()
-          << ErrorInfo::Message("Unknown option '" + e.get_option_name() + "'"));
+                            << ErrorInfo::Message("Unknown option '" + e.get_option_name() + "'"));
     }
 
     if (variablesMap.count(VERSION_SWITCH)) {
-      cout << "Common lib " << Version::getString() << '\n' << "Revision " << Version::getRevision()
-          << '\n';
+      cout << "Common lib " << Version::getString() << '\n'
+           << "Revision " << Version::getRevision()
+           << '\n';
       return 0;
     }
 
@@ -106,22 +104,21 @@ int Program::execute(int argc, char** argv)
 
     // Start the actual program
     run(variablesMap);
-  }
-  catch (const ProgramOptionException& e) {
+  } catch (const ProgramOptionException& e) {
     auto message = boost::get_error_info<ErrorInfo::Message>(e);
     std::cout << "Program options invalid: " << *message << "\n\n";
     printHelp(optionsDescription);
-  }
-  catch (const po::error& e) {
+  } catch (const po::error& e) {
     std::cout << "Program options error: " << e.what() << "\n\n";
     printHelp(optionsDescription);
-  }
-  catch (const std::exception& e) {
+  } catch (const std::exception& e) {
 #if (BOOST_VERSION >= 105400)
-    std::cout << "Error: " << e.what() << '\n' << boost::diagnostic_information(e, isVerbose()) << '\n';
+    std::cout << "Error: " << e.what() << '\n'
+              << boost::diagnostic_information(e, isVerbose()) << '\n';
 #else
 #pragma message "BOOST_VERSION < 105400"
-    std::cout << "Error: " << e.what() << '\n' << boost::diagnostic_information(e) << '\n';
+    std::cout << "Error: " << e.what() << '\n'
+              << boost::diagnostic_information(e) << '\n';
 #endif
   }
 

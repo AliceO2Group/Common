@@ -16,20 +16,20 @@ namespace Common
 /// Class that executes a function on scope exit
 class GuardFunction
 {
-  public:
-    /// \param function Function to execute on scope exit. Must not throw.
-    GuardFunction(std::function<void()> function)
-        : mFunction(function)
-    {
-    }
+ public:
+  /// \param function Function to execute on scope exit. Must not throw.
+  GuardFunction(std::function<void()> function)
+    : mFunction(function)
+  {
+  }
 
-    ~GuardFunction()
-    {
-      mFunction();
-    }
+  ~GuardFunction()
+  {
+    mFunction();
+  }
 
-  private:
-    std::function<void()> mFunction;
+ private:
+  std::function<void()> mFunction;
 };
 
 } // namespace Common

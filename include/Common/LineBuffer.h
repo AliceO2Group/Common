@@ -7,8 +7,9 @@
 #include <string>
 #include <queue>
 
-class LineBuffer {
-public:
+class LineBuffer
+{
+ public:
   /// Constructor
   LineBuffer();
 
@@ -20,15 +21,15 @@ public:
   /// \param[in] timeout     timeout in milliseconds, -1 for blocking call
   /// \return 0 on success, -1 if EOF
   int appendFromFileDescriptor(int fd, int timeout);
-   
+
   // Retrieve next complete line from buffer, immediate returns.
   /// \param[out] nextLine    Next complete line from buffer.
   /// \return 0 on success, -1 if no complete line yet
-  int getNextLine(std::string &nextLine);
-  
+  int getNextLine(std::string& nextLine);
+
   //void appendString(const char *s);
-  
-  private:
+
+ private:
   std::queue<std::string> completeLines;
   std::string pendingLine;
 };

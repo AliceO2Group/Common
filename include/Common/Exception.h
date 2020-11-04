@@ -10,8 +10,10 @@
 #include <string>
 #include <boost/exception/all.hpp>
 
-namespace AliceO2 {
-namespace Common {
+namespace AliceO2
+{
+namespace Common
+{
 
 namespace ErrorInfo
 {
@@ -20,17 +22,17 @@ using Input = boost::error_info<struct _Input, std::string>;
 using Suffix = boost::error_info<struct _Suffix, std::string>;
 using FileName = boost::error_info<struct _FileName, std::string>;
 using FilesystemType = boost::error_info<struct _FileSystemType, std::string>;
-}
+} // namespace ErrorInfo
 
-struct Exception : virtual std::exception, virtual boost::exception
-{
-    /// The what() function is overridden to use the 'ErrorInfo::Message' when available
-    virtual const char* what() const noexcept override;
+struct Exception : virtual std::exception, virtual boost::exception {
+  /// The what() function is overridden to use the 'ErrorInfo::Message' when available
+  virtual const char* what() const noexcept override;
 };
 
-struct ProgramOptionException : virtual Exception {};
+struct ProgramOptionException : virtual Exception {
+};
 
-}
-}
+} // namespace Common
+} // namespace AliceO2
 
 #endif //COMMON_EXCEPTION_H

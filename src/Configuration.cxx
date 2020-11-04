@@ -18,7 +18,6 @@ ConfigFilePrivate::~ConfigFilePrivate()
 {
 }
 
-
 ConfigFile::ConfigFile()
 {
   dPtr = new ConfigFilePrivate();
@@ -32,20 +31,24 @@ ConfigFile::~ConfigFile()
 }
 
 #define PREFIX_FILE "file:"
-#define SUFFIX_FILE_INI {".ini", ".cfg"}
+#define SUFFIX_FILE_INI \
+  {                     \
+    ".ini", ".cfg"      \
+  }
 
 void ConfigFile::load(const std::string path)
 {
-  if (path.length() == 0) { throw std::string("Invalid argument"); }
+  if (path.length() == 0) {
+    throw std::string("Invalid argument");
+  }
 
   //
   // open location according to prefix
   //
 
-
   // filesystem file
   if (boost::algorithm::starts_with(path.c_str(), PREFIX_FILE)) {
-    const char *filename;
+    const char* filename;
     filename = &path[strlen(PREFIX_FILE)];
 
     // TODO: filter out comments in file with boost filtering_stream
@@ -60,8 +63,7 @@ void ConfigFile::load(const std::string path)
       if (boost::algorithm::ends_with(filename, suffix)) {
         try {
           boost::property_tree::ini_parser::read_ini(filename, dPtr->pt);
-        }
-        catch (boost::property_tree::ini_parser::ini_parser_error perr) {
+        } catch (boost::property_tree::ini_parser::ini_parser_error perr) {
           std::stringstream ss;
           if (perr.line()) {
             ss << perr.message() << " in " << perr.filename() << " line " << perr.line();
@@ -79,105 +81,105 @@ void ConfigFile::load(const std::string path)
   }
 }
 
-void ConfigFile::load(boost::property_tree::ptree const &tree) {
+void ConfigFile::load(boost::property_tree::ptree const& tree)
+{
   // copy input property_tree object
-  dPtr->pt=tree;
+  dPtr->pt = tree;
 }
 
-
-void getValueSpecialization(void) {
+void getValueSpecialization(void)
+{
   ConfigFile f;
   const std::string s("");
   int vInt;
-  f.getValue(s,vInt);
-  vInt=f.getValue<int>(s);
+  f.getValue(s, vInt);
+  vInt = f.getValue<int>(s);
   float vFloat;
-  f.getValue("",vFloat);
-  vFloat=f.getValue<float>(s);
+  f.getValue("", vFloat);
+  vFloat = f.getValue<float>(s);
   std::string vString;
-  f.getValue("",vString);
-  vString=f.getValue<std::string>(s);
+  f.getValue("", vString);
+  vString = f.getValue<std::string>(s);
 }
-
 
 //template void ConfigFile::getValue<float>(std::string, float&);
 
-
-
-
-
 // http://stackoverflow.com/questions/4586768/how-to-iterate-a-boost-property-tree
-string indent(int level) {
-  string s; 
-  for (int i=0; i<level; i++) s += "  ";
-  return s; 
+string indent(int level)
+{
+  string s;
+  for (int i = 0; i < level; i++)
+    s += "  ";
+  return s;
 }
 
-void printTree (boost::property_tree::ptree &pt, int level) {
+void printTree(boost::property_tree::ptree& pt, int level)
+{
   if (pt.empty()) {
-    cerr << "\""<< pt.data()<< "\"";
+    cerr << "\"" << pt.data() << "\"";
   } else {
-    if (level) cerr << endl; 
-    cerr << indent(level) << "{" << endl;     
+    if (level)
+      cerr << endl;
+    cerr << indent(level) << "{" << endl;
     for (boost::property_tree::ptree::iterator pos = pt.begin(); pos != pt.end();) {
-      cerr << indent(level+1) << "\"" << pos->first << "\": "; 
-      printTree(pos->second, level + 1); 
-      ++pos; 
+      cerr << indent(level + 1) << "\"" << pos->first << "\": ";
+      printTree(pos->second, level + 1);
+      ++pos;
       if (pos != pt.end()) {
-        cerr << ","; 
+        cerr << ",";
       }
       cerr << endl;
-    } 
-    cerr << indent(level) << " }";     
+    }
+    cerr << indent(level) << " }";
   }
-  return; 
+  return;
 }
 
-void ConfigFile::print() {
-  printTree(dPtr->pt,0);
+void ConfigFile::print()
+{
+  printTree(dPtr->pt, 0);
 }
 
-
-
-
-
-
-
-ConfigFileBrowser::Iterator::Iterator(ConfigFileBrowser *_bPtr, ConfigFileBrowser::Iterator::t_Iterator _it, ConfigFileBrowser::Iterator::t_Iterator _itEnd)
-:bPtr(_bPtr),it(_it),itEnd(_itEnd) {
+ConfigFileBrowser::Iterator::Iterator(ConfigFileBrowser* _bPtr, ConfigFileBrowser::Iterator::t_Iterator _it, ConfigFileBrowser::Iterator::t_Iterator _itEnd)
+  : bPtr(_bPtr), it(_it), itEnd(_itEnd)
+{
   // skip initial elements if filter defined
   findNext();
 }
 
 // iterate until matching sub-tree name found, in case a filter is defined
-void ConfigFileBrowser::Iterator::findNext() {
-  int l=bPtr->filter.length();
+void ConfigFileBrowser::Iterator::findNext()
+{
+  int l = bPtr->filter.length();
   if (l) {
-    while (it!=itEnd) {
+    while (it != itEnd) {
       std::string s((*it).first);
-      if (!s.compare(0,l,bPtr->filter)) {
-         break;
+      if (!s.compare(0, l, bPtr->filter)) {
+        break;
       }
       ++it;
     }
   }
 }
 
-const std::string & ConfigFileBrowser::Iterator::operator*() {
+const std::string& ConfigFileBrowser::Iterator::operator*()
+{
   return (*it).first;
 }
 
-ConfigFileBrowser::Iterator& ConfigFileBrowser::Iterator::operator++() {
-   ++it;
-   findNext();      
-   return *this;
+ConfigFileBrowser::Iterator& ConfigFileBrowser::Iterator::operator++()
+{
+  ++it;
+  findNext();
+  return *this;
 }
 
-bool ConfigFileBrowser::Iterator::operator!=(const ConfigFileBrowser::Iterator& _it) const {
-  return it!=_it.it;
+bool ConfigFileBrowser::Iterator::operator!=(const ConfigFileBrowser::Iterator& _it) const
+{
+  return it != _it.it;
 }
 
-  /*
+/*
  To use separator character other than default '.', each of the get versions has another form, which takes an additional parameter in front of path. This parameter of type char/wchar_t specifies the separating character. This is a lifesaving device for those who may have dots in their keys:
 
 pt.get<float>('/', "p.a.t.h/t.o/v.a.l.u.e");
@@ -185,25 +187,28 @@ pt.get('/', "p.a.t.h/t.o/v.a.l.u.e", 0, NULL);
 pt.get_optional<std::string>('/', "p.a.t.h/t.o/v.a.l.u.e");
 */
 
-ConfigFileBrowser::ConfigFileBrowser(ConfigFile *_p, std::string _filter, std::string _startingNode) {
-  p=_p;
-  filter=_filter;
-  startingNode=_startingNode;
-  if (startingNode.length()>0) {
-    ptPtr=&p->dPtr->pt.get_child(startingNode);
+ConfigFileBrowser::ConfigFileBrowser(ConfigFile* _p, std::string _filter, std::string _startingNode)
+{
+  p = _p;
+  filter = _filter;
+  startingNode = _startingNode;
+  if (startingNode.length() > 0) {
+    ptPtr = &p->dPtr->pt.get_child(startingNode);
   } else {
-    ptPtr=&p->dPtr->pt;
+    ptPtr = &p->dPtr->pt;
   }
 }
 
-ConfigFileBrowser::~ConfigFileBrowser() {
+ConfigFileBrowser::~ConfigFileBrowser()
+{
 }
 
-ConfigFileBrowser::Iterator ConfigFileBrowser::begin() {
-  return {this,ptPtr->begin(),ptPtr->end()};
+ConfigFileBrowser::Iterator ConfigFileBrowser::begin()
+{
+  return { this, ptPtr->begin(), ptPtr->end() };
 }
 
-ConfigFileBrowser::Iterator ConfigFileBrowser::end() {
-  return Iterator(this,ptPtr->end(),ptPtr->end());
+ConfigFileBrowser::Iterator ConfigFileBrowser::end()
+{
+  return Iterator(this, ptPtr->end(), ptPtr->end());
 }
- 

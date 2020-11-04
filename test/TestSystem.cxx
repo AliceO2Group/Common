@@ -7,7 +7,6 @@
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
 
-
 /*
 void setSigIntHandler(void(*function)(int));
 bool isSigIntHandlerSet();
@@ -23,12 +22,12 @@ using namespace AliceO2::Common;
 
 namespace
 {
-std::atomic<bool> sSignalRaised { false };
+std::atomic<bool> sSignalRaised{ false };
 void sigIntHandler(int)
 {
   sSignalRaised = true;
 }
-} // Anyonymous namespace
+} // namespace
 
 BOOST_AUTO_TEST_CASE(TestSetSigIntHandler)
 {
@@ -73,7 +72,7 @@ BOOST_AUTO_TEST_CASE(TestGetFileSystemType)
 BOOST_AUTO_TEST_CASE(TestIsFileSystemTypeAnyOf)
 {
 #ifdef __linux__
-  BOOST_CHECK(System::isFileSystemTypeAnyOf("/sys", {"sysfs", "ext4", "tmpfs"}).first == true);
-  BOOST_CHECK(System::isFileSystemTypeAnyOf("/sys", {"blahfs", "ext42"}).first == false);
+  BOOST_CHECK(System::isFileSystemTypeAnyOf("/sys", { "sysfs", "ext4", "tmpfs" }).first == true);
+  BOOST_CHECK(System::isFileSystemTypeAnyOf("/sys", { "blahfs", "ext42" }).first == false);
 #endif
 }

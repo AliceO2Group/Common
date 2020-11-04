@@ -19,7 +19,7 @@
 /// \author Barthelemy von Haller
 void printStack()
 {
-  void *array[10];
+  void* array[10];
   int size;
   size = backtrace(array, 10);
   backtrace_symbols_fd(array, size, 2);
@@ -56,8 +56,7 @@ bool keepRunning = true; /// Indicates whether we should continue the execution 
 void handler_interruption(int sig)
 {
   if (keepRunning) {
-    std::cout << "Catched signal " << sig <<
-    "\n  Exit the process at the end of this cycle. \n  Press again Ctrl-C to force immediate exit" << std::endl;
+    std::cout << "Catched signal " << sig << "\n  Exit the process at the end of this cycle. \n  Press again Ctrl-C to force immediate exit" << std::endl;
     keepRunning = false;
   } else {
     std::cout << "Second interruption : immediate exit" << std::endl;

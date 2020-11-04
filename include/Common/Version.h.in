@@ -10,8 +10,10 @@
 #include <string>
 #include <sstream>
 
-namespace AliceO2 {
-namespace Common {
+namespace AliceO2
+{
+namespace Common
+{
 /// The current major version.
 #define COMMON_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
 
@@ -28,29 +30,34 @@ namespace Common {
 #define COMMON_VERSION_GT(MAJOR, MINOR, PATCH) \
   ((COMMON_VERSION_MAJOR > MAJOR) ||           \
    (COMMON_VERSION_MAJOR ==                    \
-    MAJOR&&(COMMON_VERSION_MINOR > MINOR || (COMMON_VERSION_MINOR == MINOR&& COMMON_VERSION_PATCH > PATCH))))
+      MAJOR &&                                 \
+    (COMMON_VERSION_MINOR > MINOR || (COMMON_VERSION_MINOR == MINOR && COMMON_VERSION_PATCH > PATCH))))
 
 /// True if the current version is equal or newer to the given.
 #define COMMON_VERSION_GE(MAJOR, MINOR, PATCH) \
   ((COMMON_VERSION_MAJOR > MAJOR) ||           \
    (COMMON_VERSION_MAJOR ==                    \
-    MAJOR&&(COMMON_VERSION_MINOR > MINOR || (COMMON_VERSION_MINOR == MINOR&& COMMON_VERSION_PATCH >= PATCH))))
+      MAJOR &&                                 \
+    (COMMON_VERSION_MINOR > MINOR || (COMMON_VERSION_MINOR == MINOR && COMMON_VERSION_PATCH >= PATCH))))
 
 /// True if the current version is older than the given one.
 #define COMMON_VERSION_LT(MAJOR, MINOR, PATCH) \
   ((COMMON_VERSION_MAJOR < MAJOR) ||           \
    (COMMON_VERSION_MAJOR ==                    \
-    MAJOR&&(COMMON_VERSION_MINOR < MINOR || (COMMON_VERSION_MINOR == MINOR&& COMMON_VERSION_PATCH < PATCH))))
+      MAJOR &&                                 \
+    (COMMON_VERSION_MINOR < MINOR || (COMMON_VERSION_MINOR == MINOR && COMMON_VERSION_PATCH < PATCH))))
 
 /// True if the current version is older or equal to the given.
 #define COMMON_VERSION_LE(MAJOR, MINOR, PATCH) \
   ((COMMON_VERSION_MAJOR < MAJOR) ||           \
    (COMMON_VERSION_MAJOR ==                    \
-    MAJOR&&(COMMON_VERSION_MINOR < MINOR || (COMMON_VERSION_MINOR == MINOR&& COMMON_VERSION_PATCH <= PATCH))))
+      MAJOR &&                                 \
+    (COMMON_VERSION_MINOR < MINOR || (COMMON_VERSION_MINOR == MINOR && COMMON_VERSION_PATCH <= PATCH))))
 
 /// Information about the current Common version.
-class Version {
-public:
+class Version
+{
+ public:
   /// @return the current major version of Common.
   static int getMajor()
   {
@@ -91,7 +98,7 @@ public:
     return version.str();
   }
 };
-}
-}
+} // namespace Common
+} // namespace AliceO2
 
 #endif // COMMON_VERSION_H

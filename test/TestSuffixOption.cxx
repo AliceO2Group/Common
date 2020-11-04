@@ -20,13 +20,17 @@ BOOST_AUTO_TEST_CASE(TestSuffixOption)
   options.add_options()("numC", SuffixOption<double>::make(&numberC), "");
 
   //  Mock arguments
-  std::vector<const char*> args = { "/test", "--numA=1Mi", "--numB=123", "--numC=-1k", };
+  std::vector<const char*> args = {
+    "/test",
+    "--numA=1Mi",
+    "--numB=123",
+    "--numC=-1k",
+  };
   po::variables_map map;
   po::store(po::parse_command_line(args.size(), args.data(), options), map);
   po::notify(map);
 
-  BOOST_CHECK(numberA == 1*1024*1024);
+  BOOST_CHECK(numberA == 1 * 1024 * 1024);
   BOOST_CHECK(numberB.getNumber() == 123);
   BOOST_CHECK(numberC == -1000.0);
 }
-

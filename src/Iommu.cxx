@@ -19,6 +19,6 @@ bool isEnabled()
   return boost::filesystem::exists("/sys/kernel/iommu_groups/0");
 }
 
-} // namespace Util
+} // namespace Iommu
 } // namespace Common
 } // namespace AliceO2
