@@ -130,10 +130,10 @@ Daemon::Daemon(int argc, char* argv[], DaemonConfigParameters* dConfigParams)
             throw __LINE__;
           }
         } break;
-	
-	case 'h': {
-	  print_usage();
-	} break;
+
+        case 'h': {
+          print_usage();
+        } break;
 
         default:
           throw __LINE__;
