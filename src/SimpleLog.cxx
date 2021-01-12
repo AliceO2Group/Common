@@ -70,7 +70,7 @@ int SimpleLog::Impl::logV(SimpleLog::Impl::Severity s, const char* message, va_l
   if (disableOutput) {
     return 0;
   }
-  
+
   char buffer[1024] = "";
   size_t len = sizeof(buffer) - 2;
   size_t ix = 0;
@@ -180,12 +180,12 @@ int SimpleLog::setLogFile(const char* logFilePath, unsigned long rotateMaxBytes,
   pImpl->disableOutput = 0;
   if (logFilePath != NULL) {
     pImpl->logFilePath = logFilePath;
-    if (!strcmp(logFilePath,"/dev/null")) {
+    if (!strcmp(logFilePath, "/dev/null")) {
       pImpl->disableOutput = 1;
       return 0;
     }
     pImpl->rotateMaxBytes = rotateMaxBytes;
-    pImpl->rotateMaxFiles = rotateMaxFiles;    
+    pImpl->rotateMaxFiles = rotateMaxFiles;
     if (rotateNow) {
       pImpl->rotate();
     }
