@@ -70,6 +70,7 @@ void print_usage()
   printf("                                 Valid keys: isInteractive, idleSleepTime, userName, redirectOutput,\n");
   printf("                                 logFile, logRotateMaxBytes, logRotateMaxFiles, logRotateNow.\n");
   printf("  -h                             This help.\n");
+  printf("\n");
 }
 
 Daemon::Daemon(int argc, char* argv[], DaemonConfigParameters* dConfigParams)
@@ -133,6 +134,7 @@ Daemon::Daemon(int argc, char* argv[], DaemonConfigParameters* dConfigParams)
 
         case 'h': {
           print_usage();
+          return;
         } break;
 
         default:
