@@ -23,7 +23,7 @@ class SimpleLog
 
   // Set (or change) the log file name. Previous file used is closed. New file is appended when already existing.
   // Optionnaly, an automatic log rotation can be defined. Older files are renamed, appending .1, .2, .3, etc.
-  // \param logFilePath Path to log file. If NULL, using stdout/stderr.
+  // \param logFilePath Path to log file. If NULL, using stdout/stderr. If /dev/null, messages are completely dropped.
   // \param rotateMaxBytes Maximum file size, after which a new file is created. If zero, no limit.
   // \param rotateMaxFiles Maximum number of files to keep (including the "current" file). If zero, no limit.
   // \param rotateNow If non-zero, the file is immediately rotated (independently of its size), otherwise it is appended.

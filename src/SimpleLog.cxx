@@ -36,6 +36,7 @@ class SimpleLog::Impl
   int formatOptions;
   int fdStdout;
   int fdStderr;
+  bool disableOutput = 0; // when set, messages completely dropped (logfile=/dev/null)
 
   // log rotation settings
   unsigned long rotateMaxBytes = 0;
@@ -65,6 +66,11 @@ SimpleLog::Impl::~Impl()
 
 int SimpleLog::Impl::logV(SimpleLog::Impl::Severity s, const char* message, va_list ap)
 {
+  // immediate return if output disabled
+  if (disableOutput) {
+    return 0;
+  }
+  
   char buffer[1024] = "";
   size_t len = sizeof(buffer) - 2;
   size_t ix = 0;
@@ -167,21 +173,25 @@ SimpleLog::~SimpleLog()
 int SimpleLog::setLogFile(const char* logFilePath, unsigned long rotateMaxBytes, unsigned int rotateMaxFiles, unsigned int rotateNow)
 {
   pImpl->closeLogFile();
+  pImpl->logFilePath = "";
+  pImpl->rotateMaxFiles = 0;
+  pImpl->rotateMaxBytes = 0;
+  pImpl->logFileSize = 0;
+  pImpl->disableOutput = 0;
   if (logFilePath != NULL) {
-    pImpl->rotateMaxBytes = rotateMaxBytes;
-    pImpl->rotateMaxFiles = rotateMaxFiles;
     pImpl->logFilePath = logFilePath;
+    if (!strcmp(logFilePath,"/dev/null")) {
+      pImpl->disableOutput = 1;
+      return 0;
+    }
+    pImpl->rotateMaxBytes = rotateMaxBytes;
+    pImpl->rotateMaxFiles = rotateMaxFiles;    
     if (rotateNow) {
       pImpl->rotate();
     }
     if (pImpl->openLogFile()) {
       return -1;
     }
-  } else {
-    pImpl->logFilePath = "";
-    pImpl->rotateMaxFiles = 0;
-    pImpl->rotateMaxBytes = 0;
-    pImpl->logFileSize = 0;
   }
   return 0;
 }
