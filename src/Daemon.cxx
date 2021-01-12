@@ -61,6 +61,17 @@ int createDaemon(int closeFiles)
   return 0;
 }
 
+void print_usage()
+{
+  printf("Daemon startup command line options:\n");
+  printf("  -z [pathToConfigurationFile]   Define the path to the configuration file to be loaded.\n");
+  printf("  -o [key]=[value]               Set an optional parameter, defined as a key/value pair.\n");
+  printf("                                 Possibly overwritten by corresponding content in configuration file [daemon] section\n");
+  printf("                                 Valid keys: isInteractive, idleSleepTime, userName, redirectOutput,\n");
+  printf("                                 logFile, logRotateMaxBytes, logRotateMaxFiles, logRotateNow.\n");
+  printf("  -h                             This help.\n");
+}
+
 Daemon::Daemon(int argc, char* argv[], DaemonConfigParameters* dConfigParams)
 {
   isInitialized = 0;
@@ -72,7 +83,7 @@ Daemon::Daemon(int argc, char* argv[], DaemonConfigParameters* dConfigParams)
   try {
     // parse command line parameters
     int option;
-    while ((option = getopt(argc, argv, "z:o:")) != -1) {
+    while ((option = getopt(argc, argv, "z:o:h")) != -1) {
       switch (option) {
 
         case 'z':
@@ -119,6 +130,10 @@ Daemon::Daemon(int argc, char* argv[], DaemonConfigParameters* dConfigParams)
             throw __LINE__;
           }
         } break;
+	
+	case 'h': {
+	  print_usage();
+	} break;
 
         default:
           throw __LINE__;
