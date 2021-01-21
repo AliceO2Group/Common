@@ -71,14 +71,14 @@ class Daemon
  protected:
   SimpleLog log;     // object for output logging.
   ConfigFile config; // input configuration file, if any. Loaded if path provided on command line.
-  
+
   struct ConfigOption {
     std::string key;
     std::string value;
   };
-  
-  std::vector<ConfigOption> execOptions; // options extracted from command line arguments (-o key=value)  
-  
+
+  std::vector<ConfigOption> execOptions; // options extracted from command line arguments (-o key=value)
+
   // check daemon status (e.g. after constructor, before starting main loop by calling run(), to know if init success)
   bool isOk();
 

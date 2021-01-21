@@ -127,18 +127,18 @@ Daemon::Daemon(int argc, char* argv[], DaemonConfigParameters* dConfigParams, st
           } else if (key == "logRotateNow") {
             params.logRotateNow = std::stoi(value);
           } else {
-	    bool keyOk = 0;
-	    for (auto const& k : extraCommandLineOptions) {
-	      if (k == key) {
-	        keyOk = 1;
-		execOptions.push_back({key, value});
-	        break;
-	      }
-	    }
-	    if (!keyOk) {
+            bool keyOk = 0;
+            for (auto const& k : extraCommandLineOptions) {
+              if (k == key) {
+                keyOk = 1;
+                execOptions.push_back({ key, value });
+                break;
+              }
+            }
+            if (!keyOk) {
               log.error("Unkown option key %s in option %s", key.c_str(), optarg);
               throw __LINE__;
-	    }
+            }
           }
         } break;
 
