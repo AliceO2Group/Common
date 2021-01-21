@@ -5,6 +5,7 @@
 
 #include "SimpleLog.h"
 #include <string>
+#include <vector>
 
 #include <Common/Configuration.h>
 
@@ -35,13 +36,15 @@ class Daemon
   // takes as input main(argc,argv) command line parameters, and custom configuration options.
   // accepted command line parameters:
   // -z configFileURI : load provided config file (e.g. file:../.../daemon.cfg. See Configuration.h for URI specs)
-  // -okey=value : set a given key/value pair parameter.
+  // -o key=value : set a given key/value pair parameter.
   //
   // Configuration options may are overwritten by those provided in [daemon] section of the config file, if any.
   // There is a 1-to-1 match between key names and members of the DaemonConfigParameters class.
   // i.e. user name running the daemon can be set by passing a pointer to a custom DaemonConfigParameters object,
   // but it is overwritten by value of [daemon] userName key in configuration file, if defined.
-  Daemon(int argc = 0, char* argv[] = nullptr, DaemonConfigParameters* = nullptr);
+  // Optional argument "extraCommandLineOptions" gives a list of extra option keys (-o key=value) accepted on the command line.
+  // They are parsed and made available in the "execOptions" variable after initialization.
+  Daemon(int argc = 0, char* argv[] = nullptr, DaemonConfigParameters* = nullptr, std::vector<std::string> extraCommandLineOptions = {});
 
   // destructor
   virtual ~Daemon();
@@ -68,7 +71,14 @@ class Daemon
  protected:
   SimpleLog log;     // object for output logging.
   ConfigFile config; // input configuration file, if any. Loaded if path provided on command line.
-
+  
+  struct ConfigOption {
+    std::string key;
+    std::string value;
+  };
+  
+  std::vector<ConfigOption> execOptions; // options extracted from command line arguments (-o key=value)  
+  
   // check daemon status (e.g. after constructor, before starting main loop by calling run(), to know if init success)
   bool isOk();
 
