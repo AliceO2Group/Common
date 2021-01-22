@@ -73,7 +73,7 @@ void print_usage()
   printf("\n");
 }
 
-Daemon::Daemon(int argc, char* argv[], DaemonConfigParameters* dConfigParams)
+Daemon::Daemon(int argc, char* argv[], DaemonConfigParameters* dConfigParams, std::vector<std::string> extraCommandLineOptions)
 {
   isInitialized = 0;
 
@@ -127,8 +127,18 @@ Daemon::Daemon(int argc, char* argv[], DaemonConfigParameters* dConfigParams)
           } else if (key == "logRotateNow") {
             params.logRotateNow = std::stoi(value);
           } else {
-            log.error("Unkown option key %s in option %s", key.c_str(), optarg);
-            throw __LINE__;
+            bool keyOk = 0;
+            for (auto const& k : extraCommandLineOptions) {
+              if (k == key) {
+                keyOk = 1;
+                execOptions.push_back({ key, value });
+                break;
+              }
+            }
+            if (!keyOk) {
+              log.error("Unkown option key %s in option %s", key.c_str(), optarg);
+              throw __LINE__;
+            }
           }
         } break;
 
