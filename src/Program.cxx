@@ -108,9 +108,11 @@ int Program::execute(int argc, char** argv)
     auto message = boost::get_error_info<ErrorInfo::Message>(e);
     std::cout << "Program options invalid: " << *message << "\n\n";
     printHelp(optionsDescription);
+    return 2;
   } catch (const po::error& e) {
     std::cout << "Program options error: " << e.what() << "\n\n";
     printHelp(optionsDescription);
+    return 2;
   } catch (const std::exception& e) {
 #if (BOOST_VERSION >= 105400)
     std::cout << "Error: " << e.what() << '\n'
@@ -120,6 +122,7 @@ int Program::execute(int argc, char** argv)
     std::cout << "Error: " << e.what() << '\n'
               << boost::diagnostic_information(e) << '\n';
 #endif
+    return 1;
   }
 
   return 0;
