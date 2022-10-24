@@ -277,7 +277,7 @@ int SimpleLog::Impl::openLogFile()
   if (logFilePath.length() == 0) {
     return 0;
   }
-  const char *mode = "a";
+  const char* mode = "a";
   if (rotateMaxFiles == 1) {
     mode = "w";
   }
