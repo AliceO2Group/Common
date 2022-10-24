@@ -144,6 +144,11 @@ int SimpleLog::Impl::logV(SimpleLog::Impl::Severity s, const char* message, va_l
   if (fp != NULL) {
     if ((ix + logFileSize > rotateMaxBytes) && (rotateMaxBytes > 0)) {
       closeLogFile();
+      if (rotateMaxFiles == 1) {
+        // stop after first file
+        disableOutput = 1;
+        return -1;
+      }
       rotate();
       if (openLogFile())
         return -1;
@@ -194,6 +199,9 @@ int SimpleLog::setLogFile(const char* logFilePath, unsigned long rotateMaxBytes,
     if (!strcmp(logFilePath, "/dev/null")) {
       pImpl->disableOutput = 1;
       return 0;
+    }
+    if (rotateMaxFiles < 0) {
+      rotateMaxFiles = 1;
     }
     pImpl->rotateMaxBytes = rotateMaxBytes;
     pImpl->rotateMaxFiles = rotateMaxFiles;
@@ -268,6 +276,10 @@ int SimpleLog::Impl::openLogFile()
   logFileSize = 0;
   if (logFilePath.length() == 0) {
     return 0;
+  }
+  const char *mode = "a";
+  if (rotateMaxFiles == 1) {
+    mode = "w";
   }
   fp = fopen(logFilePath.c_str(), "a");
   if (fp == NULL) {
@@ -371,7 +383,7 @@ void SimpleLog::Impl::rotate()
     } else {
       inFile = dirName + fileName + "." + std::to_string(oldIndex);
     }
-    if ((newIndex > rotateMaxFiles) && (rotateMaxFiles != 0)) {
+    if ((newIndex >= rotateMaxFiles) && (rotateMaxFiles != 0)) {
       // this file should be removed
       unlink(inFile.c_str());
     } else {
