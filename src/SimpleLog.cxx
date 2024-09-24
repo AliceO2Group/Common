@@ -200,9 +200,6 @@ int SimpleLog::setLogFile(const char* logFilePath, unsigned long rotateMaxBytes,
       pImpl->disableOutput = 1;
       return 0;
     }
-    if (rotateMaxFiles < 0) {
-      rotateMaxFiles = 1;
-    }
     pImpl->rotateMaxBytes = rotateMaxBytes;
     pImpl->rotateMaxFiles = rotateMaxFiles;
     if (rotateNow) {
@@ -281,7 +278,7 @@ int SimpleLog::Impl::openLogFile()
   if (rotateMaxFiles == 1) {
     mode = "w";
   }
-  fp = fopen(logFilePath.c_str(), "a");
+  fp = fopen(logFilePath.c_str(), mode);
   if (fp == NULL) {
     return -1;
   }
@@ -355,7 +352,7 @@ void SimpleLog::Impl::rotate()
         rotateIx.push_back(std::stoi(postfix));
       }
     }
-    free(dp);
+    closedir(dp);
   }
 
   // sort indexes in order
