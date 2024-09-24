@@ -14,14 +14,17 @@
 // helps to test e.g. command line parameters settings
 
 #include <Common/SimpleLog.h>
+#include <unistd.h>
 
 int main()
 {
 
   SimpleLog theLog;
   theLog.setLogFile("/tmp/test.log", 100, 4, 0);
-  theLog.info("test message");
-
+  for (int i=0; i<10; i++) {
+    theLog.info("test message %d",i);
+  }
+  //sleep(10);
   return 0;
 }
 
