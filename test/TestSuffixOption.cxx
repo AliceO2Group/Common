@@ -45,4 +45,3 @@ BOOST_AUTO_TEST_CASE(TestSuffixOption)
   BOOST_CHECK(numberB.getNumber() == 123);
   BOOST_CHECK(numberC == -1000.0);
 }
-

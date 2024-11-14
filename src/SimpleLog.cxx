@@ -125,7 +125,7 @@ int SimpleLog::Impl::logV(SimpleLog::Impl::Severity s, const char* message, va_l
     } else if (s == Severity::Warning) {
       ix += snprintf(&buffer[ix], len - ix, "Warning - ");
     } else {
-      //ix+=snprintf(&buffer[ix], len-ix, "");
+      // ix+=snprintf(&buffer[ix], len-ix, "");
     }
   }
 
@@ -410,4 +410,3 @@ void SimpleLog::Impl::rotate()
 }
 
 /// \todo: thread to flush output every 1 second
-

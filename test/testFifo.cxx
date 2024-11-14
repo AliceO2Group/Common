@@ -57,4 +57,3 @@ BOOST_AUTO_TEST_CASE(fifo_test)
 
   printf("fifoSz=%d sum=%d\n", fifoSz, sum2);
 }
-

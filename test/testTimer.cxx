@@ -60,4 +60,3 @@ BOOST_AUTO_TEST_CASE(timer_test)
 
   BOOST_CHECK_EQUAL(success, 1);
 }
-

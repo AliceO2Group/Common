@@ -91,7 +91,7 @@ void* MemPool::getPage()
     int newIx = (lastPageIndexGet + 1 + i) % numberOfPages;
     if (!pageIsUsed[newIx].test_and_set()) {
       lastPageIndexGet = newIx;
-      //printf("getPage() scan => %d\n",j);
+      // printf("getPage() scan => %d\n",j);
       return pageTable[newIx];
     }
     j++;
@@ -109,7 +109,7 @@ void MemPool::releasePage(void* pagePtr)
     if (pagePtr == pageTable[pageIx]) {
       pageIsUsed[pageIx].clear();
       lastPageIndexRelease = pageIx;
-      //printf("realeasePage() scan => %d\n",j);
+      // printf("realeasePage() scan => %d\n",j);
       return;
     }
     j++;
@@ -120,4 +120,3 @@ int MemPool::getPageSize()
 {
   return pageSize;
 }
-
