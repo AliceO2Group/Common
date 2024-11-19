@@ -32,4 +32,3 @@ BOOST_AUTO_TEST_CASE(TestBasicThread)
   thread.join();
   BOOST_CHECK(number > 0);
 }
-

@@ -104,4 +104,3 @@ std::string Thread::getName()
 {
   return name;
 }
-

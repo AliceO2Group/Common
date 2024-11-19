@@ -112,5 +112,4 @@ int LineBuffer::getNextLine(std::string& nextLine)
   return 0;
 }
 
-//void LineBuffer::appendString(const char *s) {}
-
+// void LineBuffer::appendString(const char *s) {}

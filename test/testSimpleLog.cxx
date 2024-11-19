@@ -21,10 +21,9 @@ int main()
 
   SimpleLog theLog;
   theLog.setLogFile("/tmp/test.log", 100, 4, 0);
-  for (int i=0; i<10; i++) {
-    theLog.info("test message %d",i);
+  for (int i = 0; i < 10; i++) {
+    theLog.info("test message %d", i);
   }
-  //sleep(10);
+  // sleep(10);
   return 0;
 }
-

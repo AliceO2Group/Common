@@ -38,4 +38,3 @@ const char* Exception::what() const noexcept
 
 } // namespace Common
 } // namespace AliceO2
-
