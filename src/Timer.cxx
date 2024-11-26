@@ -36,9 +36,17 @@ void Timer::reset(int timeout)
   tmax = timeout / 1000000.0;
 }
 
-void Timer::increment()
+void Timer::increment(bool ensureFuture)
 {
-  t0 += std::chrono::microseconds((int)(tmax * 1000000.0));
+  if (ensureFuture) {
+    double tnext = getRemainingTime();
+    if ((tnext <= 0) && (tmax > 0)) {
+      int n = (int)(1 - (tnext / tmax));
+      t0 += std::chrono::microseconds((int)(n * tmax * 1000000.0));
+    }
+  } else {
+    t0 += std::chrono::microseconds((int)(tmax * 1000000.0));
+  }
 }
 
 int Timer::isTimeout()
@@ -64,4 +72,3 @@ double Timer::getRemainingTime()
 
 } // namespace Common
 } // namespace AliceO2
-

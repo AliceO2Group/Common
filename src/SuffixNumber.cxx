@@ -50,4 +50,3 @@ const std::vector<std::pair<std::string, const size_t>>& get()
 } // namespace _SuffixNumberTable
 } // namespace Common
 } // namespace AliceO2
-

@@ -45,7 +45,9 @@ class Timer
   /// Reset timer by adding timeout value to starting time value.
   /// Usefull when called in loops, prevents loosing time elapsed after previous timeout.
   /// (e.g.: to implement timeout every 1 second without drift in time)
-  void increment();
+  /// If ensureFuture is true, value is incremented until next occurence is in the future (and only if timeout has occured already),
+  /// to avoid possibly several successive immediate timeouts again when multiple timeout periods have been missed.
+  void increment(bool ensureFuture = false);
 
   /// Check if time elapsed since timer reset (or last increment set) is bigger than timeout value set.
   /// \return Returns 1 if timeout, 0 otherwise.

@@ -36,7 +36,7 @@ class SimpleLog
   // Optionnaly, an automatic log rotation can be defined. Older files are renamed, appending .1, .2, .3, etc.
   // \param logFilePath Path to log file. If NULL, using stdout/stderr. If /dev/null, messages are completely dropped.
   // \param rotateMaxBytes Maximum file size, after which a new file is created. If zero, no limit.
-  // \param rotateMaxFiles Maximum number of files to keep (including the "current" file). If zero, no limit.
+  // \param rotateMaxFiles Maximum number of files to keep (including the "current" file). If zero, no limit. If one, a single file is created and cleared immediately, and messages are discarded after reaching rotateMaxBytes.
   // \param rotateNow If non-zero, the file is immediately rotated (independently of its size), otherwise it is appended.
   int setLogFile(const char* logFilePath = NULL,
                  unsigned long rotateMaxBytes = 0, unsigned int rotateMaxFiles = 0, unsigned int rotateNow = 0);

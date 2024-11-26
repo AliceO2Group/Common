@@ -113,7 +113,7 @@ void getValueSpecialization(void)
   vString = f.getValue<std::string>(s);
 }
 
-//template void ConfigFile::getValue<float>(std::string, float&);
+// template void ConfigFile::getValue<float>(std::string, float&);
 
 // http://stackoverflow.com/questions/4586768/how-to-iterate-a-boost-property-tree
 string indent(int level)
@@ -223,4 +223,3 @@ ConfigFileBrowser::Iterator ConfigFileBrowser::end()
 {
   return Iterator(this, ptPtr->end(), ptPtr->end());
 }
-

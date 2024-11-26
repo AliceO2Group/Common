@@ -125,7 +125,7 @@ int SimpleLog::Impl::logV(SimpleLog::Impl::Severity s, const char* message, va_l
     } else if (s == Severity::Warning) {
       ix += snprintf(&buffer[ix], len - ix, "Warning - ");
     } else {
-      //ix+=snprintf(&buffer[ix], len-ix, "");
+      // ix+=snprintf(&buffer[ix], len-ix, "");
     }
   }
 
@@ -144,6 +144,11 @@ int SimpleLog::Impl::logV(SimpleLog::Impl::Severity s, const char* message, va_l
   if (fp != NULL) {
     if ((ix + logFileSize > rotateMaxBytes) && (rotateMaxBytes > 0)) {
       closeLogFile();
+      if (rotateMaxFiles == 1) {
+        // stop after first file
+        disableOutput = 1;
+        return -1;
+      }
       rotate();
       if (openLogFile())
         return -1;
@@ -269,7 +274,11 @@ int SimpleLog::Impl::openLogFile()
   if (logFilePath.length() == 0) {
     return 0;
   }
-  fp = fopen(logFilePath.c_str(), "a");
+  const char* mode = "a";
+  if (rotateMaxFiles == 1) {
+    mode = "w";
+  }
+  fp = fopen(logFilePath.c_str(), mode);
   if (fp == NULL) {
     return -1;
   }
@@ -343,7 +352,7 @@ void SimpleLog::Impl::rotate()
         rotateIx.push_back(std::stoi(postfix));
       }
     }
-    free(dp);
+    closedir(dp);
   }
 
   // sort indexes in order
@@ -371,7 +380,7 @@ void SimpleLog::Impl::rotate()
     } else {
       inFile = dirName + fileName + "." + std::to_string(oldIndex);
     }
-    if ((newIndex > rotateMaxFiles) && (rotateMaxFiles != 0)) {
+    if ((newIndex >= rotateMaxFiles) && (rotateMaxFiles != 0)) {
       // this file should be removed
       unlink(inFile.c_str());
     } else {
@@ -401,4 +410,3 @@ void SimpleLog::Impl::rotate()
 }
 
 /// \todo: thread to flush output every 1 second
-

@@ -40,6 +40,23 @@ BOOST_AUTO_TEST_CASE(timer_test)
     success = 1;
   }
 
+  // test increment
+  printf("\nTest increment (ensureFuture=0)\n");
+  // this should blindly increase by fixed amount of time
+  t.reset(100000);
+  usleep(350000);
+  for (int i = 1; i <= 5; i++) {
+    printf("iteration %d : timeout = %d timeRemaining = %.2fs\n", i, (int)t.isTimeout(), t.getRemainingTime());
+    t.increment(0);
+  }
+  printf("\nTest increment (ensureFuture=1)\n");
+  // this should update timeout to next occurence, with respect to start and given period
+  t.reset(100000);
+  usleep(250000);
+  for (int i = 1; i <= 5; i++) {
+    printf("iteration %d : timeout = %d timeRemaining = %.2fs\n", i, (int)t.isTimeout(), t.getRemainingTime());
+    t.increment(1);
+  }
+
   BOOST_CHECK_EQUAL(success, 1);
 }
-
