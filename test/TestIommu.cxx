@@ -19,4 +19,3 @@ BOOST_AUTO_TEST_CASE(TestIsEnabled)
 {
   BOOST_CHECK_NO_THROW(AliceO2::Common::Iommu::isEnabled());
 }
-

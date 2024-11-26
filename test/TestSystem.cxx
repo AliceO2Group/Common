@@ -87,4 +87,3 @@ BOOST_AUTO_TEST_CASE(TestIsFileSystemTypeAnyOf)
   BOOST_CHECK(System::isFileSystemTypeAnyOf("/sys", { "blahfs", "ext42" }).first == false);
 #endif
 }
-

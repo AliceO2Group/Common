@@ -278,4 +278,3 @@ Daemon::LoopStatus Daemon::doLoop()
 
 // todo
 // boost exceptions?
-

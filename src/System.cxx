@@ -143,4 +143,3 @@ void assertFileSystemType(const std::string& path, const std::set<std::string>& 
 } // namespace System
 } // namespace Common
 } // namespace AliceO2
-

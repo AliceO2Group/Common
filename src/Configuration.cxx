@@ -223,4 +223,3 @@ ConfigFileBrowser::Iterator ConfigFileBrowser::end()
 {
   return Iterator(this, ptPtr->end(), ptPtr->end());
 }
-
