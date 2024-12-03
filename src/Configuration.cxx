@@ -74,7 +74,7 @@ void ConfigFile::load(const std::string path)
       if (boost::algorithm::ends_with(filename, suffix)) {
         try {
           boost::property_tree::ini_parser::read_ini(filename, dPtr->pt);
-        } catch (boost::property_tree::ini_parser::ini_parser_error const &perr) {
+        } catch (boost::property_tree::ini_parser::ini_parser_error const& perr) {
           std::stringstream ss;
           if (perr.line()) {
             ss << perr.message() << " in " << perr.filename() << " line " << perr.line();
