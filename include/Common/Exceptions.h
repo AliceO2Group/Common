@@ -40,7 +40,10 @@ struct ExceptionBase : public Exception {
 struct ObjectNotFoundError : virtual ExceptionBase {
   const char* what() const noexcept override
   {
-    return "Object not found error";
+    std::string message = "Object not found: ";
+    auto* errinfo = boost::get_error_info<errinfo_object_name>(*this);
+    message += errinfo ? *boost::get_error_info<errinfo_object_name>(*this) : "(object_name not specified)";
+    return strdup(message.c_str());
   }
 };
 
