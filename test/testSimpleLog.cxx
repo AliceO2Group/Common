@@ -15,6 +15,14 @@
 
 #include <Common/SimpleLog.h>
 #include <unistd.h>
+#include <thread>
+#include <vector>
+
+void logWorker(SimpleLog& log, int threadId, int count) {
+  for (int i = 0; i < count; ++i) {
+    log.info("Thread %d - test message %d", threadId, i);
+  }
+}
 
 int main()
 {
@@ -25,5 +33,18 @@ int main()
     theLog.info("test message %d", i);
   }
   // sleep(10);
+
+  // test parallel threads
+  theLog.setLogFile("/tmp/testthread.log", 1000, 10, 0);
+  const int numThreads = 10;
+  const int messagesPerThread = 10;
+  std::vector<std::thread> threads;
+  for (int t = 0; t < numThreads; ++t) {
+    threads.emplace_back(logWorker, std::ref(theLog), t, messagesPerThread);
+  }
+  for (auto& th : threads) {
+    th.join();
+  }
+
   return 0;
 }

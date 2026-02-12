@@ -21,6 +21,7 @@
 #include <string.h>
 #include <algorithm>
 #include <string>
+#include <mutex>
 
 class SimpleLog::Impl
 {
@@ -60,6 +61,7 @@ class SimpleLog::Impl
   void rotate(); // this renames older files
 
   friend class SimpleLog;
+  std::mutex fileMutex;
 };
 
 SimpleLog::Impl::Impl()
@@ -140,6 +142,9 @@ int SimpleLog::Impl::logV(SimpleLog::Impl::Severity s, const char* message, va_l
   ix++;
   buffer[ix] = 0;
 
+  int nBytes = 0; // count bytes output
+  {
+  std::lock_guard<std::mutex> lock(fileMutex);
   int fd;
   if (fp != NULL) {
     if ((ix + logFileSize > rotateMaxBytes) && (rotateMaxBytes > 0)) {
@@ -161,9 +166,10 @@ int SimpleLog::Impl::logV(SimpleLog::Impl::Severity s, const char* message, va_l
       fd = fdStdout;
     }
   }
-  int nBytes = write(fd, buffer, ix);
+  nBytes = write(fd, buffer, ix);
   if ((fp != NULL) && (nBytes > 0)) {
     logFileSize += nBytes;
+  }
   }
   if (nBytes != (int)ix) {
     return -1;
