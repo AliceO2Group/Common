@@ -129,6 +129,7 @@ set(TEST_SRCS
   test/TestSuffixOption.cxx
   test/TestSystem.cxx
   test/testTimer.cxx
+  test/testExceptions.cxx
 )
 
 foreach (test ${TEST_SRCS})
